@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.next.digip.controller.ControllerLocal;
+import com.next.digip.exceptions.ExceptionRestClient;
 
 public class WindowTestWebServices extends JFrame implements ActionListener {
 
@@ -57,6 +58,7 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public WindowTestWebServices() {
+		setTitle("Test");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 652, 412);
 		contentPane = new JPanel();
@@ -186,14 +188,12 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 			try {
 				this.controller.testWebService(this.txtUri.getText(), method);
 				
-			} catch (IOException | RuntimeException e1) {
+			} catch (IOException | RuntimeException | ExceptionRestClient e1) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, e1.toString(), "Error: ", JOptionPane.ERROR_MESSAGE);
 				this.textAreaResponse.setText(e1.toString());
-			}
-						
-		}
-		
+			}				
+		}	
 	}
 	
 	

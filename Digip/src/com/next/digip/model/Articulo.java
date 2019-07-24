@@ -1,7 +1,11 @@
 package com.next.digip.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.next.digip.enums.TipoRotacion;
 
 public class Articulo {
@@ -14,10 +18,11 @@ public class Articulo {
 	private boolean usaVencimiento;
 	private TipoRotacion articuloTipoRotacion;
 	private boolean activo;
-	private Set<ArticuloUnidadMedida> unidadesMedida;
+	private List<ArticuloUnidadMedida> unidadesMedida;
 	
 	public Articulo() {
 		super();
+		this.unidadesMedida = new ArrayList<ArticuloUnidadMedida>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -85,15 +90,30 @@ public class Articulo {
 		this.activo = activo;
 	}
 
-	public Set<ArticuloUnidadMedida> getUnidadesMedida() {
+	public List<ArticuloUnidadMedida> getUnidadesMedida() {
 		return unidadesMedida;
 	}
 
-	public void setUnidadesMedida(Set<ArticuloUnidadMedida> unidadesMedida) {
+	public void setUnidadesMedida(List<ArticuloUnidadMedida> unidadesMedida) {
 		this.unidadesMedida = unidadesMedida;
 	}
 	
+	public void addUnidadMedida(ArticuloUnidadMedida unidadMedida) {
+		this.unidadesMedida.add(unidadMedida);
+	}
 	
+	public String toJson() {
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = mapper.writeValueAsString(this);
+            System.out.println("JSON = " + json);
+            return json;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+		return null;
+	}
 	
 
 }

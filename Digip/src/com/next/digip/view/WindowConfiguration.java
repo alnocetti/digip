@@ -40,6 +40,7 @@ public class WindowConfiguration extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public WindowConfiguration() {
+		setTitle("Configuration");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 197, 173);
 		getContentPane().setLayout(null);

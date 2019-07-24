@@ -1,7 +1,6 @@
 package com.next.digip.view;
 
 import java.awt.EventQueue;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -15,7 +14,7 @@ public class Main extends JFrame implements ActionListener{
 
 
 	private static final long serialVersionUID = 1L;
-	private JFrame frame;
+	private JFrame frmDigipRest;
 
 	/**
 	 * Launch the application.
@@ -25,7 +24,7 @@ public class Main extends JFrame implements ActionListener{
 			public void run() {
 				try {
 					Main window = new Main();
-					window.frame.setVisible(true);
+					window.frmDigipRest.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -44,12 +43,13 @@ public class Main extends JFrame implements ActionListener{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDigipRest = new JFrame();
+		frmDigipRest.setTitle("Digip - Rest Client");
+		frmDigipRest.setBounds(100, 100, 590, 430);
+		frmDigipRest.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
+		frmDigipRest.setJMenuBar(menuBar);
 		
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
@@ -74,21 +74,18 @@ public class Main extends JFrame implements ActionListener{
 		
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mnHelp.add(mntmAbout);
+		mnHelp.addActionListener(this);
 		
 		JMenuItem mntmTestWebServices = new JMenuItem("Test web services");
 		mnHelp.add(mntmTestWebServices);
+		frmDigipRest.getContentPane().setLayout(null);
 		mntmTestWebServices.addActionListener(this);
-		
-//		System.out.println(mntmTestWebServices.getActionCommand());
-		
-		
-		frame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 		mntmAbout.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Exit")) {
-			frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+			frmDigipRest.dispatchEvent(new WindowEvent(frmDigipRest, WindowEvent.WINDOW_CLOSING));
 		}
 		
 		if (e.getActionCommand().equals("Configuration")) {
@@ -99,6 +96,11 @@ public class Main extends JFrame implements ActionListener{
 		if(e.getActionCommand().equals("Test web services")) {
 			WindowTestWebServices windowTestWebServices = new WindowTestWebServices();
 			windowTestWebServices.setVisible(true);
+		}
+		
+		if(e.getActionCommand().equals("About")) {
+			WindowAbout windowAbout = new WindowAbout();
+			windowAbout.setVisible(true);
 		}
 	}
 }

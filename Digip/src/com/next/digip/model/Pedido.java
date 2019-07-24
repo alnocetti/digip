@@ -1,22 +1,27 @@
 package com.next.digip.model;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.next.digip.enums.EstadoPedido;
 
 public class Pedido {
 	private String codigo;
 	private String codigoClienteUbicacion;
 	private EstadoPedido pedidoEstado;
-	private String fecha;
-	private String fechaEstimadaEntrega;
+	private Date fecha;
+	private Date fechaEstimadaEntrega;
 	private String observacion;
 	private float importe;
 	private String codigoDespacho;
-	private Set<PedidoDetalle> pedidoDetalle;
+	private List<PedidoDetalle> pedidoDetalle;
 	
 	public Pedido() {
 		super();
+		this.pedidoDetalle = new ArrayList<PedidoDetalle>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -44,20 +49,20 @@ public class Pedido {
 		this.pedidoEstado = pedidoEstado;
 	}
 
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(String fecha) {
-		this.fecha = fecha;
+	public void setFecha(Date fechaPedido) {
+		this.fecha = fechaPedido;
 	}
 
-	public String getFechaEstimadaEntrega() {
+	public Date getFechaEstimadaEntrega() {
 		return fechaEstimadaEntrega;
 	}
 
-	public void setFechaEstimadaEntrega(String fechaEstimadaEntrega) {
-		this.fechaEstimadaEntrega = fechaEstimadaEntrega;
+	public void setFechaEstimadaEntrega(Date fechaPedido) {
+		this.fechaEstimadaEntrega = fechaPedido;
 	}
 
 	public String getObservacion() {
@@ -84,13 +89,29 @@ public class Pedido {
 		this.codigoDespacho = codigoDespacho;
 	}
 
-	public Set<PedidoDetalle> getPedidoDetalle() {
+	public List<PedidoDetalle> getPedidoDetalle() {
 		return pedidoDetalle;
 	}
 
-	public void setPedidoDetalle(Set<PedidoDetalle> pedidoDetalle) {
-		this.pedidoDetalle = pedidoDetalle;
+	public void setPedidoDetalle(List<PedidoDetalle> detallePedido) {
+		this.pedidoDetalle = detallePedido;
 	}
 	
+	public void addDetallePedido(PedidoDetalle pedidoDetalle) {
+		this.pedidoDetalle.add(pedidoDetalle);
+	}
+	
+	public String toJson() {
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = mapper.writeValueAsString(this);
+            System.out.println("JSON = " + json);
+            return json;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+		return null;
+	}
 	
 }

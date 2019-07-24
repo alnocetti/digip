@@ -1,5 +1,7 @@
 package com.next.digip.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.next.digip.enums.UnidadMedida;
@@ -16,10 +18,11 @@ public class ArticuloUnidadMedida {
 	private float profundo;
 	private float peso;
 	private boolean activo;
-	private Set<ArticuloUnidadMedidaCodigo> unidadMedidaCodigos;
+	private List<ArticuloUnidadMedidaCodigo> unidadMedidaCodigos;
 	
 	public ArticuloUnidadMedida() {
 		super();
+		this.unidadMedidaCodigos = new ArrayList<ArticuloUnidadMedidaCodigo>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -103,14 +106,16 @@ public class ArticuloUnidadMedida {
 		this.activo = activo;
 	}
 
-	public Set<ArticuloUnidadMedidaCodigo> getUnidadMedidaCodigos() {
+	public List<ArticuloUnidadMedidaCodigo> getUnidadMedidaCodigos() {
 		return unidadMedidaCodigos;
 	}
 
-	public void setUnidadMedidaCodigos(Set<ArticuloUnidadMedidaCodigo> unidadMedidaCodigos) {
+	public void setUnidadMedidaCodigos(List<ArticuloUnidadMedidaCodigo> unidadMedidaCodigos) {
 		this.unidadMedidaCodigos = unidadMedidaCodigos;
 	}
 	
+	public void addUnidadMedidaCodigo(ArticuloUnidadMedidaCodigo unidadMedidaCodigo) {
+		this.unidadMedidaCodigos.add(unidadMedidaCodigo);
+	}
 	
-
 }
