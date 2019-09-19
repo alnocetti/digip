@@ -1,7 +1,7 @@
 package com.next.digip.model;
 
 public class ArticuloUnidadMedidaCodigo {
-	private String codigo;
+	private String Codigo;
 
 	public ArticuloUnidadMedidaCodigo() {
 		super();
@@ -9,11 +9,11 @@ public class ArticuloUnidadMedidaCodigo {
 	}
 
 	public String getCodigo() {
-		return codigo;
+		return Codigo;
 	}
 
 	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+		this.Codigo = codigo;
 	}
 
 }

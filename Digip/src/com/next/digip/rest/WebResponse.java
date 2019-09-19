@@ -2,7 +2,7 @@ package com.next.digip.rest;
 
 public class WebResponse {
 	private String responseMessage;
-	private String responseCode;
+	private int responseCode;
 	
 	public WebResponse() {
 		super();
@@ -17,12 +17,12 @@ public class WebResponse {
 		this.responseMessage = responseMessage;
 	}
 
-	public String getResponseCode() {
+	public int getResponseCode() {
 		return responseCode;
 	}
 
-	public void setResponseCode(String responseCode) {
-		this.responseCode = responseCode;
+	public void setResponseCode(int i) {
+		this.responseCode = i;
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.next.digip.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.next.digip.dbf.reader.Reader;
@@ -38,10 +39,28 @@ public class ControllerLocal {
 		return this.restClient.getArticulos();
 	}
 	
-	public void postArticulos() throws IOException, ExceptionRestClient{
+	public List<WebResponse> postArticulos() throws IOException, ExceptionRestClient{
 		System.out.println("<-- postArticulos");
-		this.restClient.postArticulos();
-		return;
+		
+		List<Articulo> articulos = this.dbfReader.readArticulos();
+		
+		List<WebResponse> respuestas = new ArrayList<WebResponse>();
+		
+		int i = 0;
+		
+		for (Articulo articulo : articulos) {
+			
+			if(i <= 10) {
+			
+				WebResponse webResponse = this.restClient.postArticulos(articulo);
+				
+				respuestas.add(webResponse);
+			}
+			
+			i = i + 1;
+			
+		}
+		return respuestas;
 	}
 	
 	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException, ExceptionRestClient{
@@ -56,7 +75,15 @@ public class ControllerLocal {
 	
 	public void postPedidos() throws IOException, ExceptionRestClient {
 		System.out.println("<-- postPedidos()");
-		this.restClient.postPedidos();
+		 
+		List<Pedido> pedidos = this.dbfReader.readPedidos();
+		
+		for(Pedido pedido : pedidos) {
+
+			this.restClient.postPedidos(pedido);
+			
+		}
+		
 		return;
 	}
 

@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import java.awt.Window.Type;
 
 public class WindowConfiguration extends JFrame implements ActionListener{
 
@@ -17,7 +18,6 @@ public class WindowConfiguration extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField txtUser;
-	private JPasswordField pwdPassword;
 	private JButton btnOk;
 
 	/**
@@ -42,36 +42,27 @@ public class WindowConfiguration extends JFrame implements ActionListener{
 	public WindowConfiguration() {
 		setTitle("Configuration");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 197, 173);
+		setBounds(100, 100, 296, 155);
 		getContentPane().setLayout(null);
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 181, 134);
+		panel.setBounds(0, 0, 280, 123);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblUser = new JLabel("User:");
-		lblUser.setBounds(10, 11, 46, 14);
+		JLabel lblUser = new JLabel("API-KEY:");
+		lblUser.setBounds(10, 35, 73, 14);
 		panel.add(lblUser);
-		
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setBounds(10, 36, 76, 14);
-		panel.add(lblPassword);
 		
 		txtUser = new JTextField();
 		txtUser.setText("User");
-		txtUser.setBounds(76, 8, 86, 20);
+		txtUser.setBounds(75, 32, 173, 20);
 		panel.add(txtUser);
 		txtUser.setColumns(10);
 		
-		pwdPassword = new JPasswordField();
-		pwdPassword.setText("Password");
-		pwdPassword.setBounds(76, 33, 86, 20);
-		panel.add(pwdPassword);
-		
 		btnOk = new JButton("Ok");
-		btnOk.setBounds(46, 86, 89, 23);
+		btnOk.setBounds(95, 78, 89, 23);
 		panel.add(btnOk);
 		this.btnOk.addActionListener(this);
 			

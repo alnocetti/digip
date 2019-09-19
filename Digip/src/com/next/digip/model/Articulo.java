@@ -2,117 +2,101 @@ package com.next.digip.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.next.digip.enums.TipoRotacion;
 
 public class Articulo {
 	
-	private String codigo;
-	private String descripcion;
-	private int diasVidaUtil;
-	private boolean usaLote;
-	private boolean usaSerie;
-	private boolean usaVencimiento;
-	private TipoRotacion articuloTipoRotacion;
-	private boolean activo;
-	private List<ArticuloUnidadMedida> unidadesMedida;
+	private String CodigoArticulo;
+	private String Descripcion;
+	private int DiasVidaUtil;
+	private boolean UsaLote;
+	private boolean UsaSerie;
+	private boolean UsaVencimiento;
+	private TipoRotacion ArticuloTipoRotacion;
+	private boolean Activo;
+	private List<ArticuloUnidadMedida> ArticuloUnidadMedida;
 	
 	public Articulo() {
 		super();
-		this.unidadesMedida = new ArrayList<ArticuloUnidadMedida>();
+		this.ArticuloUnidadMedida = new ArrayList<ArticuloUnidadMedida>();
 		// TODO Auto-generated constructor stub
 	}
 
 	public String getCodigo() {
-		return codigo;
+		return CodigoArticulo;
 	}
 
 	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+		this.CodigoArticulo = codigo;
 	}
 
 	public String getDescripcion() {
-		return descripcion;
+		return Descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+		this.Descripcion = descripcion;
 	}
 
 	public int getDiasVidaUtil() {
-		return diasVidaUtil;
+		return DiasVidaUtil;
 	}
 
 	public void setDiasVidaUtil(int diasVidaUtil) {
-		this.diasVidaUtil = diasVidaUtil;
+		this.DiasVidaUtil = diasVidaUtil;
 	}
 
 	public boolean isUsaLote() {
-		return usaLote;
+		return UsaLote;
 	}
 
 	public void setUsaLote(boolean usaLote) {
-		this.usaLote = usaLote;
+		this.UsaLote = usaLote;
 	}
 
 	public boolean isUsaSerie() {
-		return usaSerie;
+		return UsaSerie;
 	}
 
 	public void setUsaSerie(boolean usaSerie) {
-		this.usaSerie = usaSerie;
+		this.UsaSerie = usaSerie;
 	}
 
 	public boolean isUsaVencimiento() {
-		return usaVencimiento;
+		return UsaVencimiento;
 	}
 
 	public void setUsaVencimiento(boolean usaVencimiento) {
-		this.usaVencimiento = usaVencimiento;
+		this.UsaVencimiento = usaVencimiento;
 	}
 
 	public TipoRotacion getArticuloTipoRotacion() {
-		return articuloTipoRotacion;
+		return ArticuloTipoRotacion;
 	}
 
 	public void setArticuloTipoRotacion(TipoRotacion articuloTipoRotacion) {
-		this.articuloTipoRotacion = articuloTipoRotacion;
+		this.ArticuloTipoRotacion = articuloTipoRotacion;
 	}
 
 	public boolean isActivo() {
-		return activo;
+		return Activo;
 	}
 
 	public void setActivo(boolean activo) {
-		this.activo = activo;
+		this.Activo = activo;
 	}
 
 	public List<ArticuloUnidadMedida> getUnidadesMedida() {
-		return unidadesMedida;
+		return ArticuloUnidadMedida;
 	}
 
-	public void setUnidadesMedida(List<ArticuloUnidadMedida> unidadesMedida) {
-		this.unidadesMedida = unidadesMedida;
+	public void setUnidadesMedida(List<ArticuloUnidadMedida> articuloUnidadMedida) {
+		this.ArticuloUnidadMedida = articuloUnidadMedida;
 	}
 	
 	public void addUnidadMedida(ArticuloUnidadMedida unidadMedida) {
-		this.unidadesMedida.add(unidadMedida);
-	}
-	
-	public String toJson() {
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String json = mapper.writeValueAsString(this);
-            System.out.println("JSON = " + json);
-            return json;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-		return null;
+		this.ArticuloUnidadMedida.add(unidadMedida);
 	}
 	
 

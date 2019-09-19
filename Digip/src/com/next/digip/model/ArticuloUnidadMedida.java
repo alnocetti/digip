@@ -8,114 +8,114 @@ import com.next.digip.enums.UnidadMedida;
 
 public class ArticuloUnidadMedida {
 	
-	private UnidadMedida unidadMedida;
-	private int unidades;
-	private boolean esUnidadDeVenta;
-	private boolean esUnidadMenor;
-	private boolean esUnidadConversion;
-	private float alto;
-	private float ancho;
-	private float profundo;
-	private float peso;
-	private boolean activo;
-	private List<ArticuloUnidadMedidaCodigo> unidadMedidaCodigos;
+	private UnidadMedida UnidadMedida;
+	private int Unidades;
+	private boolean EsUnidadDeVenta;
+	private boolean EsUnidadMenor;
+	private boolean EsUnidadConversion;
+	private float Alto;
+	private float Ancho;
+	private float Profundo;
+	private float Peso;
+	private boolean Activo;
+	private List<ArticuloUnidadMedidaCodigo> UnidadMedidaCodigos;
 	
 	public ArticuloUnidadMedida() {
 		super();
-		this.unidadMedidaCodigos = new ArrayList<ArticuloUnidadMedidaCodigo>();
+		this.UnidadMedidaCodigos = new ArrayList<ArticuloUnidadMedidaCodigo>();
 		// TODO Auto-generated constructor stub
 	}
 
 	public UnidadMedida getUnidadMedida() {
-		return unidadMedida;
+		return UnidadMedida;
 	}
 
 	public void setUnidadMedida(UnidadMedida unidadMedida) {
-		this.unidadMedida = unidadMedida;
+		this.UnidadMedida = unidadMedida;
 	}
 
 	public int getUnidades() {
-		return unidades;
+		return Unidades;
 	}
 
 	public void setUnidades(int unidades) {
-		this.unidades = unidades;
+		this.Unidades = unidades;
 	}
 
 	public boolean isEsUnidadDeVenta() {
-		return esUnidadDeVenta;
+		return EsUnidadDeVenta;
 	}
 
 	public void setEsUnidadDeVenta(boolean esUnidadDeVenta) {
-		this.esUnidadDeVenta = esUnidadDeVenta;
+		this.EsUnidadDeVenta = esUnidadDeVenta;
 	}
 
 	public boolean isEsUnidadMenor() {
-		return esUnidadMenor;
+		return EsUnidadMenor;
 	}
 
 	public void setEsUnidadMenor(boolean esUnidadMenor) {
-		this.esUnidadMenor = esUnidadMenor;
+		this.EsUnidadMenor = esUnidadMenor;
 	}
 
 	public boolean isEsUnidadConversion() {
-		return esUnidadConversion;
+		return EsUnidadConversion;
 	}
 
 	public void setEsUnidadConversion(boolean esUnidadConversion) {
-		this.esUnidadConversion = esUnidadConversion;
+		this.EsUnidadConversion = esUnidadConversion;
 	}
 
 	public float getAlto() {
-		return alto;
+		return Alto;
 	}
 
 	public void setAlto(float alto) {
-		this.alto = alto;
+		this.Alto = alto;
 	}
 
 	public float getAncho() {
-		return ancho;
+		return Ancho;
 	}
 
 	public void setAncho(float ancho) {
-		this.ancho = ancho;
+		this.Ancho = ancho;
 	}
 
 	public float getProfundo() {
-		return profundo;
+		return Profundo;
 	}
 
 	public void setProfundo(float profundo) {
-		this.profundo = profundo;
+		this.Profundo = profundo;
 	}
 
 	public float getPeso() {
-		return peso;
+		return Peso;
 	}
 
 	public void setPeso(float peso) {
-		this.peso = peso;
+		this.Peso = peso;
 	}
 
 	public boolean isActivo() {
-		return activo;
+		return Activo;
 	}
 
 	public void setActivo(boolean activo) {
-		this.activo = activo;
+		this.Activo = activo;
 	}
 
 	public List<ArticuloUnidadMedidaCodigo> getUnidadMedidaCodigos() {
-		return unidadMedidaCodigos;
+		return UnidadMedidaCodigos;
 	}
 
 	public void setUnidadMedidaCodigos(List<ArticuloUnidadMedidaCodigo> unidadMedidaCodigos) {
-		this.unidadMedidaCodigos = unidadMedidaCodigos;
+		this.UnidadMedidaCodigos = unidadMedidaCodigos;
 	}
 	
 	public void addUnidadMedidaCodigo(ArticuloUnidadMedidaCodigo unidadMedidaCodigo) {
-		this.unidadMedidaCodigos.add(unidadMedidaCodigo);
+		this.UnidadMedidaCodigos.add(unidadMedidaCodigo);
 	}
 	
 }

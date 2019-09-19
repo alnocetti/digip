@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.next.digip.enums.EstadoPedido;
 
 public class Pedido {
@@ -99,19 +97,6 @@ public class Pedido {
 	
 	public void addDetallePedido(PedidoDetalle pedidoDetalle) {
 		this.pedidoDetalle.add(pedidoDetalle);
-	}
-	
-	public String toJson() {
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String json = mapper.writeValueAsString(this);
-            System.out.println("JSON = " + json);
-            return json;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-		return null;
 	}
 	
 }

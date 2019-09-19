@@ -1,10 +1,12 @@
 package com.next.digip.view;
 
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -20,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.next.digip.controller.ControllerLocal;
 import com.next.digip.exceptions.ExceptionRestClient;
+import com.next.digip.rest.WebResponse;
 
 public class WindowTestWebServices extends JFrame implements ActionListener {
 
@@ -169,6 +172,8 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 		}
 		
 		if(e.getSource().equals(this.btnOk)) {
+		
+
 			String method = "";
 
 			if(this.rdbtnGet.isSelected()) {
@@ -185,15 +190,38 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 		        JOptionPane.showMessageDialog(null, "Debe seleccionar una entidad", "Error: ", JOptionPane.ERROR_MESSAGE);
 		        return;
 			}
+			List<WebResponse> responses;
 			try {
-				this.controller.testWebService(this.txtUri.getText(), method);
+//				webResponse = this.controller.testWebService(this.txtUri.getText(), method);
+				
+				contentPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+
+				responses = this.controller.postArticulos();
+				
+				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				
+				for(WebResponse webResponse : responses) {
+					
+					if(webResponse.getResponseCode() >= 400) {
+						
+						JOptionPane.showMessageDialog(null, webResponse.getResponseMessage(), "Error: ", JOptionPane.ERROR_MESSAGE);
+						
+					} else {
+						
+						JOptionPane.showMessageDialog(null, webResponse.getResponseMessage(), "Envio: ", JOptionPane.INFORMATION_MESSAGE);
+
+					}
+				}
 				
 			} catch (IOException | RuntimeException | ExceptionRestClient e1) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null, e1.toString(), "Error: ", JOptionPane.ERROR_MESSAGE);
-				this.textAreaResponse.setText(e1.toString());
-			}				
-		}	
+				
+//				this.textAreaResponse.setText(e1.toString());
+			} finally {	
+//				this.textAreaResponse.setText(webResponse.getResponseMessage());
+		
+			}
+		}
 	}
 	
 	

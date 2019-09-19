@@ -14,7 +14,6 @@ import com.linuxense.javadbf.DBFRow;
 import com.linuxense.javadbf.DBFUtils;
 import com.next.digip.enums.EstadoPedido;
 import com.next.digip.enums.TipoRotacion;
-import com.next.digip.enums.UnidadMedida;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
@@ -105,7 +104,7 @@ public class Reader {
 								
 				Articulo articulo = new Articulo();
 				
-				ArticuloUnidadMedida unidadMedida = new ArticuloUnidadMedida();
+				ArticuloUnidadMedida articuloUnidadMedida = new ArticuloUnidadMedida();
 				
 				ArticuloUnidadMedidaCodigo unidadMedidaCodigo = new ArticuloUnidadMedidaCodigo();
 				
@@ -126,33 +125,33 @@ public class Reader {
 										
 					if (field.getName().equals("ITUNIDAD")) {
 						
-						unidadMedida.setUnidades(((BigDecimal) rowObjects[i]).intValue());
+						articuloUnidadMedida.setUnidades(((BigDecimal) rowObjects[i]).intValue());
 						
 					}
 					
 				}
 				
 
-				articulo.setDiasVidaUtil(0);
+				articulo.setDiasVidaUtil(365);
 				articulo.setUsaLote(false);
 				articulo.setUsaSerie(false);
 				articulo.setUsaVencimiento(false);
 				articulo.setArticuloTipoRotacion(TipoRotacion.Alta);
 				articulo.setActivo(true);
 				
-				unidadMedidaCodigo.setCodigo("Unidad");
-				unidadMedida.setUnidadMedida(UnidadMedida.Unidad);
-				unidadMedida.addUnidadMedidaCodigo(unidadMedidaCodigo);
-				unidadMedida.setEsUnidadDeVenta(true);
-				unidadMedida.setEsUnidadMenor(true);
-				unidadMedida.setEsUnidadConversion(true);
-				unidadMedida.setAlto(0);
-				unidadMedida.setAncho(0);
-				unidadMedida.setProfundo(0);
-				unidadMedida.setPeso(0);
-				unidadMedida.setActivo(true);
+//				unidadMedidaCodigo.setCodigo("Unidad");
+//				unidadMedida.setUnidadMedida(UnidadMedida.Unidad);
+				articuloUnidadMedida.addUnidadMedidaCodigo(unidadMedidaCodigo);
+//				unidadMedida.setEsUnidadDeVenta(true);
+//				unidadMedida.setEsUnidadMenor(true);
+//				unidadMedida.setEsUnidadConversion(true);
+//				unidadMedida.setAlto(0);
+//				unidadMedida.setAncho(0);
+//				unidadMedida.setProfundo(0);
+//				unidadMedida.setPeso(0);
+//				unidadMedida.setActivo(true);
 				
-				articulo.addUnidadMedida(unidadMedida);
+				articulo.addUnidadMedida(articuloUnidadMedida);
 														
 				articulos.add(articulo);
 
@@ -170,8 +169,6 @@ public class Reader {
 		return articulos;
 		
 	}
-	
-	
 	
 	public List<Pedido> readPedidos(){
 		
