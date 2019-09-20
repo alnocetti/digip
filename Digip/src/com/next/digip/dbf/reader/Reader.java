@@ -101,6 +101,13 @@ public class Reader {
 			Object[] rowObjects;
 
 			while ((rowObjects = reader.nextRecord()) != null) {
+				
+				//ITPEDIDO == "S" .AND. SUBSTR(CODIGO,1,1) # "C" .AND. GRUPO # 90
+				boolean validacion1 = false;
+				
+				boolean validacion2 = false;
+				
+				boolean validacion3 = false;
 								
 				Articulo articulo = new Articulo();
 				
@@ -111,26 +118,55 @@ public class Reader {
 				for (int i = 0; i < numberOfFields; i++) {
 					
 					DBFField field = reader.getField(i);
+					
+					//Valida si se tiene que enviar el producto
+					if (field.getName().equals("ITPEDIDO")) {
+						
+						String itpedido = (String) rowObjects[i];
+						
+						if (itpedido.equals("S")) {
+							validacion1 = true;
+						}
+						
+					}
+					
+					if (field.getName().equals("CODIGO")) {
+						
+						String codigo = (String) rowObjects[i];
+						
+						if(!codigo.substring(0, 1).equals("C")) {
+							validacion2 = true;
+						}
+					}
+					
+					if (field.getName().equals("GRUPO")) {
+						
+						int grupo = ((BigDecimal) rowObjects[i]).intValue();
+						
+						if(grupo != 90) {
+							validacion3 = true;
+						}
+					}
+					
 
-					if (field.getName().equals("ITCODIGO")) {
+					if (field.getName().equals("CODIGO")) {
 						
 						articulo.setCodigo((String) rowObjects[i]);
 					}
 					
-					if (field.getName().equals("ITDESCRIP")) {
+					if (field.getName().equals("DESCRIPCIO")) {
 						
 						articulo.setDescripcion((String) rowObjects[i]);
 						
 					}
 										
-					if (field.getName().equals("ITUNIDAD")) {
+					if (field.getName().equals("UNIDAD")) {
 						
 						articuloUnidadMedida.setUnidades(((BigDecimal) rowObjects[i]).intValue());
 						
 					}
 					
-				}
-				
+				}			
 
 				articulo.setDiasVidaUtil(365);
 				articulo.setUsaLote(false);
@@ -152,8 +188,10 @@ public class Reader {
 //				unidadMedida.setActivo(true);
 				
 				articulo.addUnidadMedida(articuloUnidadMedida);
-														
-				articulos.add(articulo);
+							
+				
+				if(validacion1 && validacion2 && validacion3) 
+					articulos.add(articulo);
 
 			}
 

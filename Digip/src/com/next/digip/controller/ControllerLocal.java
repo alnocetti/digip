@@ -43,25 +43,68 @@ public class ControllerLocal {
 		System.out.println("<-- postArticulos");
 		
 		List<Articulo> articulos = this.dbfReader.readArticulos();
+				
+		List<WebResponse> respuestas = new ArrayList<WebResponse>();
+				
+		for (Articulo articulo : articulos) {
+				
+				WebResponse webResponse = this.restClient.postArticulo(articulo);
+				
+				respuestas.add(webResponse);
+		}
+		
+		return respuestas;
+	}
+	
+	public List<WebResponse> sincronizarArticulos() throws IOException, ExceptionRestClient { 
+		
+		System.out.println("<-- Sincronizando articulos");
+		
+		List<Articulo> articulosPatagonia = this.restClient.getArticulos();
+		
+		List<Articulo> articulos = this.dbfReader.readArticulos();
 		
 		List<WebResponse> respuestas = new ArrayList<WebResponse>();
 		
 		int i = 0;
-		
+				
 		for (Articulo articulo : articulos) {
 			
-			if(i <= 10) {
+			boolean existe = false;
 			
-				WebResponse webResponse = this.restClient.postArticulos(articulo);
+			if (i <= 12) {
+			
+			for(Articulo articuloPatagonia : articulosPatagonia) {
 				
+				if (articulo.getCodigo().equals(articuloPatagonia.getCodigo())) {
+					
+					existe = true;
+					break;
+
+				}
+					
+			}
+			
+			if (existe) {
+				
+				WebResponse webResponse = this.restClient.putArticulo(articulo);
+				respuestas.add(webResponse);
+				
+			}else {
+				
+				WebResponse webResponse = this.restClient.postArticulo(articulo);
 				respuestas.add(webResponse);
 			}
 			
-			i = i + 1;
-			
+			}
+			i = i + 1;	
+				
 		}
+		
 		return respuestas;
+		
 	}
+	
 	
 	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException, ExceptionRestClient{
 		System.out.println("<-- testWebService()");

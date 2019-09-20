@@ -47,7 +47,8 @@ public class Main extends JFrame implements ActionListener{
 		frmDigipRest.setTitle("Digip - Rest Client");
 		frmDigipRest.setBounds(100, 100, 590, 430);
 		frmDigipRest.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		frmDigipRest.getContentPane().setLayout(null);
+
 		JMenuBar menuBar = new JMenuBar();
 		frmDigipRest.setJMenuBar(menuBar);
 		
@@ -71,16 +72,19 @@ public class Main extends JFrame implements ActionListener{
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
+		mnHelp.addActionListener(this);
 		
 		JMenuItem mntmAbout = new JMenuItem("About");
+		mntmAbout.addActionListener(this);
 		mnHelp.add(mntmAbout);
-		mnHelp.addActionListener(this);
 		
 		JMenuItem mntmTestWebServices = new JMenuItem("Test web services");
 		mnHelp.add(mntmTestWebServices);
-		frmDigipRest.getContentPane().setLayout(null);
 		mntmTestWebServices.addActionListener(this);
-		mntmAbout.addActionListener(this);
+		
+		JMenuItem mntmSyncFiles = new JMenuItem("Sync files");
+		mnHelp.add(mntmSyncFiles);
+		mntmSyncFiles.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -101,6 +105,11 @@ public class Main extends JFrame implements ActionListener{
 		if(e.getActionCommand().equals("About")) {
 			WindowAbout windowAbout = new WindowAbout();
 			windowAbout.setVisible(true);
+		}
+		
+		if(e.getActionCommand().equals("Sync files")) {
+			WindowSync windowSync = new WindowSync();
+			windowSync.setVisible(true);
 		}
 	}
 }

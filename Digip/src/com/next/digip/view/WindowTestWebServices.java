@@ -42,22 +42,6 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 	private ControllerLocal controller = ControllerLocal.getInstance();
 	
 	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					WindowTestWebServices frame = new WindowTestWebServices();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
 	 * Create the frame.
 	 */
 	public WindowTestWebServices() {
@@ -196,7 +180,7 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 				
 				contentPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-				responses = this.controller.postArticulos();
+				responses = this.controller.sincronizarArticulos();
 				
 				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				
