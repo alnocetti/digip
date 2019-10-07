@@ -2,7 +2,6 @@ package com.next.digip.dbf.reader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +16,8 @@ import com.next.digip.enums.TipoRotacion;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
+import com.next.digip.model.Cliente;
+import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.model.Pedido;
 import com.next.digip.model.PedidoDetalle;
 
@@ -93,14 +94,10 @@ public class Reader {
 
 			// create a DBFReader object
 			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/dtitems.dbf"));
+			
+			DBFRow row;
 
-			// get the field count if you want for some reasons like the following
-
-			int numberOfFields = reader.getFieldCount();
-
-			Object[] rowObjects;
-
-			while ((rowObjects = reader.nextRecord()) != null) {
+			while ((row = reader.nextRow()) != null) {
 				
 				//ITPEDIDO == "S" .AND. SUBSTR(CODIGO,1,1) # "C" .AND. GRUPO # 90
 				boolean validacion1 = false;
@@ -114,60 +111,20 @@ public class Reader {
 				ArticuloUnidadMedida articuloUnidadMedida = new ArticuloUnidadMedida();
 				
 				ArticuloUnidadMedidaCodigo unidadMedidaCodigo = new ArticuloUnidadMedidaCodigo();
+								
+				//Valida si se tiene que enviar el producto
+				if (row.getString("ITPEDIDO").equals("S")) 
+						validacion1 = true;
 				
-				for (int i = 0; i < numberOfFields; i++) {
-					
-					DBFField field = reader.getField(i);
-					
-					//Valida si se tiene que enviar el producto
-					if (field.getName().equals("ITPEDIDO")) {
-						
-						String itpedido = (String) rowObjects[i];
-						
-						if (itpedido.equals("S")) {
-							validacion1 = true;
-						}
-						
-					}
-					
-					if (field.getName().equals("CODIGO")) {
-						
-						String codigo = (String) rowObjects[i];
-						
-						if(!codigo.substring(0, 1).equals("C")) {
-							validacion2 = true;
-						}
-					}
-					
-					if (field.getName().equals("GRUPO")) {
-						
-						int grupo = ((BigDecimal) rowObjects[i]).intValue();
-						
-						if(grupo != 90) {
-							validacion3 = true;
-						}
-					}
-					
-
-					if (field.getName().equals("CODIGO")) {
-						
-						articulo.setCodigo((String) rowObjects[i]);
-					}
-					
-					if (field.getName().equals("DESCRIPCIO")) {
-						
-						articulo.setDescripcion((String) rowObjects[i]);
-						
-					}
-										
-					if (field.getName().equals("UNIDAD")) {
-						
-						articuloUnidadMedida.setUnidades(((BigDecimal) rowObjects[i]).intValue());
-						
-					}
-					
-				}			
-
+				if (!row.getString("CODIGO").substring(0,1).equals("C")) 
+					validacion2 = true;
+				
+				if(row.getInt("GRUPO") != 90) 
+					validacion3 = true;
+				
+	
+				articulo.setCodigo(row.getString("CODIGO"));
+				articulo.setDescripcion(row.getString("DESCRIPCIO"));
 				articulo.setDiasVidaUtil(365);
 				articulo.setUsaLote(false);
 				articulo.setUsaSerie(false);
@@ -175,9 +132,10 @@ public class Reader {
 				articulo.setArticuloTipoRotacion(TipoRotacion.Alta);
 				articulo.setActivo(true);
 				
+				articuloUnidadMedida.setUnidades(row.getInt("UNIDAD"));
+				articuloUnidadMedida.addUnidadMedidaCodigo(unidadMedidaCodigo);
 //				unidadMedidaCodigo.setCodigo("Unidad");
 //				unidadMedida.setUnidadMedida(UnidadMedida.Unidad);
-				articuloUnidadMedida.addUnidadMedidaCodigo(unidadMedidaCodigo);
 //				unidadMedida.setEsUnidadDeVenta(true);
 //				unidadMedida.setEsUnidadMenor(true);
 //				unidadMedida.setEsUnidadConversion(true);
@@ -287,6 +245,113 @@ public class Reader {
 		}
 		
 		return pedidos;
+		
+	}
+	
+	public List<Cliente> readClientes(){
+		
+		List<Cliente> clientes = new ArrayList<Cliente>();
+				
+		reader = null;
+		
+		try {
+
+			// create a DBFReader object
+			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/cccuenta.dbf"));
+
+			DBFRow row;
+			
+			while ((row = reader.nextRow()) != null) {
+				
+				Cliente cliente = new Cliente();
+							
+				cliente.setCodigo(row.getString("CLICODIGO"));
+				
+				cliente.setDescripcion(row.getString("CLIRAZSOC"));
+				
+				cliente.setIdentificadorFiscal(Integer.toString(row.getInt("CLICDIVA")));
+				
+				if (row.getString("CLIFECBAJA") == null) {
+					cliente.setActivo(true);
+				}else {
+					cliente.setActivo(false);
+				}
+				
+				clientes.add(cliente);
+				
+			}
+
+		} catch (DBFException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		finally {
+			DBFUtils.close(reader);
+		}
+		
+		return clientes;
+		
+	}
+	
+	
+	public List<ClienteUbicacion> readClientesUbicacion(){
+		
+		List<ClienteUbicacion> clientesUbicacion = new ArrayList<ClienteUbicacion>();
+				
+		reader = null;
+		
+		try {
+
+			// create a DBFReader object
+			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/cccuenta.dbf"));
+
+			DBFRow row;
+			
+			while ((row = reader.nextRow()) != null) {
+								
+				ClienteUbicacion clienteUbicacion = new ClienteUbicacion();
+			
+				clienteUbicacion.setCodigo(row.getString("CLICODIGO"));
+				
+				clienteUbicacion.setDescripcion("Direccion de " + row.getString("CLIRAZSOC"));
+								
+				if (row.getString("CLIFECBAJA") == null) {
+					clienteUbicacion.setActivo(true);
+				}else {
+					clienteUbicacion.setActivo(false);
+				}
+								
+				clienteUbicacion.setCodigoCliente(row.getString("CLICODIGO"));
+								
+				clienteUbicacion.setDireccion(row.getString("CLIDOMICI"));
+				
+				clienteUbicacion.setProvincia(Integer.toString(row.getInt("CLIPROVIN")));
+				
+				clienteUbicacion.setLocalidad(row.getString("CLILOCALI"));
+				
+				clienteUbicacion.setInformacionAdicional(row.getString("CLIOBSERVA"));
+								
+				clienteUbicacion.setLatitud(row.getString("CLILATI"));
+				
+				clienteUbicacion.setLongitud(row.getString("CLILONG"));
+				
+				//clienteUbicacion.setHorarioEntrega(row.getString("CLIHORA"));
+							
+				clientesUbicacion.add(clienteUbicacion);
+				
+			}
+
+		} catch (DBFException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		finally {
+			DBFUtils.close(reader);
+		}
+		
+		return clientesUbicacion;
 		
 	}
 	

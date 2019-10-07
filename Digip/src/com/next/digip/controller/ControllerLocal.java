@@ -66,13 +66,11 @@ public class ControllerLocal {
 		
 		List<WebResponse> respuestas = new ArrayList<WebResponse>();
 		
-		int i = 0;
+		boolean existe = false;
 				
 		for (Articulo articulo : articulos) {
 			
-			boolean existe = false;
-			
-			if (i <= 12) {
+			existe = false;
 			
 			for(Articulo articuloPatagonia : articulosPatagonia) {
 				
@@ -95,9 +93,6 @@ public class ControllerLocal {
 				WebResponse webResponse = this.restClient.postArticulo(articulo);
 				respuestas.add(webResponse);
 			}
-			
-			}
-			i = i + 1;	
 				
 		}
 		

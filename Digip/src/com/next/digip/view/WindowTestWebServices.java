@@ -159,12 +159,12 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 		
 
 			String method = "";
-
+			
 			if(this.rdbtnGet.isSelected()) {
-				method = "GET";
+				 method = "GET";
 			}else {
 				if(this.rdbtnPost.isSelected()) {
-					method = "POST";
+					 method = "POST";
 				}else {
 			        JOptionPane.showMessageDialog(null, "Debe seleccionar un metodo", "Error: ", JOptionPane.ERROR_MESSAGE);
 			        return;

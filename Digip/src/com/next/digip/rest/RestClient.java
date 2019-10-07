@@ -1,5 +1,8 @@
 package com.next.digip.rest;
+import static java.net.HttpURLConnection.HTTP_SERVER_ERROR;
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -13,6 +16,8 @@ import com.google.gson.reflect.TypeToken;
 import com.next.digip.dbf.reader.Reader;
 import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.model.Articulo;
+import com.next.digip.model.Cliente;
+import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.model.Pedido;
 
 public class RestClient {
@@ -136,6 +141,173 @@ public class RestClient {
 		return articulos;
 	}
 	
+	public List<Cliente> getClientes(){
+		
+		System.out.println("<-- getClientes()");
+		
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+		
+//		Articulo articulos[];
+		
+		try {
+			
+			Gson gson = new Gson();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/Clientes");//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			
+			if (conn.getResponseCode() != 200) {
+				
+				throw new RuntimeException("Failed : HTTP Error code : "
+						
+						+ conn.getResponseCode() + "-" + conn.getResponseMessage());
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			TypeToken<ArrayList<Cliente>> token = new TypeToken<ArrayList<Cliente>>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				clientes =  gson.fromJson(output,  token.getType());
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			
+		}
+		
+		return clientes;
+	}
+	
+	public List<ClienteUbicacion> getUbicaciones(){
+		
+		System.out.println("<-- getUbicaciones()");
+		
+		ArrayList<ClienteUbicacion> ubicaciones = new ArrayList<ClienteUbicacion>();
+		
+//		Articulo articulos[];
+		
+		try {
+			
+			Gson gson = new Gson();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/ClientesUbicaciones");//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			
+			if (conn.getResponseCode() != 200) {
+				
+				throw new RuntimeException("Failed : HTTP Error code : "
+						
+						+ conn.getResponseCode() + "-" + conn.getResponseMessage());
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			TypeToken<ArrayList<ClienteUbicacion>> token = new TypeToken<ArrayList<ClienteUbicacion>>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				ubicaciones =  gson.fromJson(output,  token.getType());
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			
+		}
+		
+		return ubicaciones;
+	}
+	
+	public ClienteUbicacion getClienteUbicacion(String codigo) {
+		
+		System.out.println("<-- getUbicacion()");
+		
+		ClienteUbicacion clienteUbicacion = new ClienteUbicacion();
+				
+		try {
+			
+			Gson gson = new Gson();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/Cliente/" + codigo + "/ClientesUbicaciones/" + codigo);//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			
+			if (conn.getResponseCode() != 200) {
+				
+				if (conn.getResponseCode() < conn.HTTP_SERVER_ERROR) {
+					
+					return null;
+					
+				}else {
+				
+					throw new RuntimeException("Failed : HTTP Error code : " + conn.getResponseCode() + "-" + conn.getResponseMessage());
+			
+				}
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			//TypeToken<ArrayList<ClienteUbicacion>> token = new TypeToken<ArrayList<ClienteUbicacion>>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				clienteUbicacion =  gson.fromJson(output,  ClienteUbicacion.class);
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			
+		}
+		
+		return clienteUbicacion;
+		
+	}
+	
 	public WebResponse postArticulo(Articulo articulo) throws IOException, ExceptionRestClient {
 		
 		System.out.println("<-- postArticulo()" + articulo.getCodigo());
@@ -207,7 +379,6 @@ public class RestClient {
 
 	}
 	
-	
 	public WebResponse putArticulo(Articulo articulo) throws IOException, ExceptionRestClient {
 		
 		System.out.println("<-- putArticulo()" + articulo.getCodigo());
@@ -228,14 +399,13 @@ public class RestClient {
 		conn.setRequestProperty("Content-Type", "application/json");
 		
 		conn.setDoOutput(true);
-		
-		OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
-		
+				
 		String auxi = gson.toJson(articulo);
 		
-		wr.write(auxi);
-		
-		wr.flush();
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+		bw.write(auxi);
+		bw.flush();
+		bw.close();
 		
 		InputStreamReader _is;
 		BufferedReader br;
@@ -279,8 +449,286 @@ public class RestClient {
 
 	}
 	
+	public WebResponse postCliente(Cliente cliente) throws IOException, ExceptionRestClient {
+		
+		System.out.println("<-- postCliente()" + cliente.getCodigo());
+		
+		Gson gson = new Gson();
+				
+		WebResponse webResponse = new WebResponse();
+		
+		url = new URL("http://api.patagoniawms.com/v1/Clientes");//your url i.e fetch data from .
+		
+		conn = (HttpURLConnection) url.openConnection();
+		
+		conn.setRequestMethod("POST");
+		
+		// seteo api-key 
+		conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+		
+		conn.setRequestProperty("Content-Type", "application/json");
+		
+		conn.setDoOutput(true);
+		
+		OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
+		
+		String auxi = gson.toJson(cliente);
+		
+		wr.write(auxi);
+		
+		wr.flush();
+		
+		InputStreamReader _is;
+		BufferedReader br;
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+		    _is = new InputStreamReader(conn.getInputStream());
+		} else {
+		     /* error from server */
+		    _is = new InputStreamReader(conn.getErrorStream());
+		}
+		
+		br = new BufferedReader(_is);
+		
+		StringBuilder builder = new StringBuilder();
+		
+		String output;
+		
+		while ((output = br.readLine()) != null) {
+
+			builder.append(output);
+		
+		}
+		
+		String aux = builder.toString();
+		
+		webResponse.setResponseCode(conn.getResponseCode());
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			
+			webResponse.setResponseMessage(conn.getResponseMessage() + ", Cliente enviado correctamente: " + cliente.getCodigo() + " - " + cliente.getDescripcion());
+			
+		} else {
+		     /* error from server */
+			webResponse.setResponseMessage(aux);
+			
+		}
+		
+		conn.disconnect();
+		
+		return webResponse;
+
+	}
+		
+	public WebResponse putCliente(Cliente cliente) throws IOException, ExceptionRestClient {
+		
+		System.out.println("<-- putCliente()" + cliente.getCodigo());
+		
+		Gson gson = new Gson();
+				
+		WebResponse webResponse = new WebResponse();
+		
+		url = new URL("http://api.patagoniawms.com/v1/Clientes/" + cliente.getCodigo());//your url i.e fetch data from .
+		
+		conn = (HttpURLConnection) url.openConnection();
+		
+		conn.setRequestMethod("PUT");
+		
+		// seteo api-key 
+		conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+		
+		conn.setRequestProperty("Content-Type", "application/json");
+		
+		conn.setDoOutput(true);
+				
+		String auxi = gson.toJson(cliente);
+		
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+		bw.write(auxi);
+		bw.flush();
+		bw.close();
+		
+		InputStreamReader _is;
+		BufferedReader br;
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+		    _is = new InputStreamReader(conn.getInputStream());
+		} else {
+		     /* error from server */
+		    _is = new InputStreamReader(conn.getErrorStream());
+		}
+		
+		br = new BufferedReader(_is);
+		
+		StringBuilder builder = new StringBuilder();
+		
+		String output;
+		
+		while ((output = br.readLine()) != null) {
+
+			builder.append(output);
+		
+		}
+		
+		String aux = builder.toString();
+		
+		webResponse.setResponseCode(conn.getResponseCode());
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			
+			webResponse.setResponseMessage(conn.getResponseMessage() + ", Cliente enviado correctamente: " + cliente.getCodigo() + " - " + cliente.getDescripcion());
+			
+		} else {
+		     /* error from server */
+			webResponse.setResponseMessage(aux);
+			
+		}
+		
+		conn.disconnect();
+		
+		return webResponse;
+
+	}
 	
+	public WebResponse postClienteUbicacion(ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
+		
+		System.out.println("<-- postClienteUbicacion()" + clienteUbicacion.getCodigo());
+		
+		Gson gson = new Gson();
+				
+		WebResponse webResponse = new WebResponse();
+		
+		url = new URL("http://api.patagoniawms.com/v1/Cliente/" + clienteUbicacion.getCodigo() + "/ClientesUbicaciones" );//your url i.e fetch data from .
+		
+		conn = (HttpURLConnection) url.openConnection();
+		
+		conn.setRequestMethod("POST");
+		
+		// seteo api-key 
+		conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+		
+		conn.setRequestProperty("Content-Type", "application/json");
+		
+		conn.setDoOutput(true);
+				
+		String auxi = gson.toJson(clienteUbicacion);
+		
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+		bw.write(auxi);
+		bw.flush();
+		bw.close();
+		
+		InputStreamReader _is;
+		BufferedReader br;
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+		    _is = new InputStreamReader(conn.getInputStream());
+		} else {
+		     /* error from server */
+		    _is = new InputStreamReader(conn.getErrorStream());
+		}
+		
+		br = new BufferedReader(_is);
+		
+		StringBuilder builder = new StringBuilder();
+		
+		String output;
+		
+		while ((output = br.readLine()) != null) {
+
+			builder.append(output);
+		
+		}
+		
+		String aux = builder.toString();
+		
+		webResponse.setResponseCode(conn.getResponseCode());
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			
+			webResponse.setResponseMessage(conn.getResponseMessage() + ", Ubicacion enviada correctamente: " + clienteUbicacion.getCodigo() + " - " + clienteUbicacion.getDescripcion());
+			
+		} else {
+		     /* error from server */
+			webResponse.setResponseMessage(aux);
+			
+		}
+		
+		conn.disconnect();
+		
+		return webResponse;
+
+	}
 	
+	public WebResponse putClienteUbicacion(ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
+		
+		System.out.println("<-- putClienteUbicacion()" + clienteUbicacion.getCodigo());
+		
+		Gson gson = new Gson();
+				
+		WebResponse webResponse = new WebResponse();
+		
+		url = new URL("http://api.patagoniawms.com/v1/Cliente/" + clienteUbicacion.getCodigo() + "/ClientesUbicaciones/" + clienteUbicacion.getCodigo());//your url i.e fetch data from .
+		
+		conn = (HttpURLConnection) url.openConnection();
+		
+		conn.setRequestMethod("PUT");
+		
+		// seteo api-key 
+		conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+		
+		conn.setRequestProperty("Content-Type", "application/json");
+		
+		conn.setDoOutput(true);
+				
+		String auxi = gson.toJson(clienteUbicacion);
+		
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+		bw.write(auxi);
+		bw.flush();
+		bw.close();
+		
+		InputStreamReader _is;
+		BufferedReader br;
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+		    _is = new InputStreamReader(conn.getInputStream());
+		} else {
+		     /* error from server */
+		    _is = new InputStreamReader(conn.getErrorStream());
+		}
+		
+		br = new BufferedReader(_is);
+		
+		StringBuilder builder = new StringBuilder();
+		
+		String output;
+		
+		while ((output = br.readLine()) != null) {
+
+			builder.append(output);
+		
+		}
+		
+		String aux = builder.toString();
+		
+		webResponse.setResponseCode(conn.getResponseCode());
+		
+		if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			
+			webResponse.setResponseMessage(conn.getResponseMessage() + ", Ubicacion enviada correctamente: " + clienteUbicacion.getCodigo() + " - " + clienteUbicacion.getDescripcion());
+			
+		} else {
+		     /* error from server */
+			webResponse.setResponseMessage(aux);
+			
+		}
+		
+		conn.disconnect();
+		
+		return webResponse;
+
+	}
 	
 	// revisar metodos pedidos
 	public List<Pedido> getPedidos(){
@@ -311,8 +759,7 @@ public class RestClient {
 		
 		return pedidos;
 	}
-	
-	
+
 	public void postPedidos(Pedido pedido) throws IOException, ExceptionRestClient {
 		
 		Gson gson = new Gson();

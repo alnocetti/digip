@@ -4,21 +4,21 @@ import com.next.digip.enums.DiaEntrega;
 
 public class ClienteUbicacion {
 	
-	private String codigo;
-	private String codigoCliente;
-	private String descripcion;
-	private String direccion;
-	private String provincia;
-	private String localidad;
-	private String email;
-	private String informacionAdicional;
-	private String informacionEntrega;
-	private String latitud;
-	private String longitud;
-	private DiaEntrega diaEntrega;
-	private String horarioEntrega;
-	private float horasAEntrega;
-	private boolean activo;
+	private String Codigo;
+	private String CodigoCliente;
+	private String Descripcion;
+	private String Direccion;
+	private String Provincia;
+	private String Localidad;
+	private String Email;
+	private String InformacionAdicional;
+	private String InformacionEntrega;
+	private String Latitud;
+	private String Longitud;
+	private DiaEntrega DiaEntrega;
+	private String HorarioEntrega;
+	private float HorasAEntrega;
+	private boolean Activo;
 
 	public ClienteUbicacion() {
 		super();
@@ -26,123 +26,123 @@ public class ClienteUbicacion {
 	}
 
 	public String getCodigo() {
-		return codigo;
+		return Codigo;
 	}
 
 	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+		this.Codigo = codigo;
 	}
 
 	public String getCodigoCliente() {
-		return codigoCliente;
+		return CodigoCliente;
 	}
 
 	public void setCodigoCliente(String codigoCliente) {
-		this.codigoCliente = codigoCliente;
+		this.CodigoCliente = codigoCliente;
 	}
 
 	public String getDescripcion() {
-		return descripcion;
+		return Descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+		this.Descripcion = descripcion;
 	}
 
 	public String getDireccion() {
-		return direccion;
+		return Direccion;
 	}
 
 	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+		this.Direccion = direccion;
 	}
 
 	public String getProvincia() {
-		return provincia;
+		return Provincia;
 	}
 
 	public void setProvincia(String provincia) {
-		this.provincia = provincia;
+		this.Provincia = provincia;
 	}
 
 	public String getLocalidad() {
-		return localidad;
+		return Localidad;
 	}
 
 	public void setLocalidad(String localidad) {
-		this.localidad = localidad;
+		this.Localidad = localidad;
 	}
 
 	public String getEmail() {
-		return email;
+		return Email;
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.Email = email;
 	}
 
 	public String getInformacionAdicional() {
-		return informacionAdicional;
+		return InformacionAdicional;
 	}
 
 	public void setInformacionAdicional(String informacionAdicional) {
-		this.informacionAdicional = informacionAdicional;
+		this.InformacionAdicional = informacionAdicional;
 	}
 
 	public String getInformacionEntrega() {
-		return informacionEntrega;
+		return InformacionEntrega;
 	}
 
 	public void setInformacionEntrega(String informacionEntrega) {
-		this.informacionEntrega = informacionEntrega;
+		this.InformacionEntrega = informacionEntrega;
 	}
 
 	public String getLatitud() {
-		return latitud;
+		return Latitud;
 	}
 
 	public void setLatitud(String latitud) {
-		this.latitud = latitud;
+		this.Latitud = latitud;
 	}
 
 	public String getLongitud() {
-		return longitud;
+		return Longitud;
 	}
 
 	public void setLongitud(String longitud) {
-		this.longitud = longitud;
+		this.Longitud = longitud;
 	}
 
 	public DiaEntrega getDiaEntrega() {
-		return diaEntrega;
+		return DiaEntrega;
 	}
 
 	public void setDiaEntrega(DiaEntrega diaEntrega) {
-		this.diaEntrega = diaEntrega;
+		this.DiaEntrega = diaEntrega;
 	}
 
 	public String getHorarioEntrega() {
-		return horarioEntrega;
+		return HorarioEntrega;
 	}
 
 	public void setHorarioEntrega(String horarioEntrega) {
-		this.horarioEntrega = horarioEntrega;
+		this.HorarioEntrega = horarioEntrega;
 	}
 
 	public float getHorasAEntrega() {
-		return horasAEntrega;
+		return HorasAEntrega;
 	}
 
 	public void setHorasAEntrega(float horasAEntrega) {
-		this.horasAEntrega = horasAEntrega;
+		this.HorasAEntrega = horasAEntrega;
 	}
 
 	public boolean isActivo() {
-		return activo;
+		return Activo;
 	}
 
 	public void setActivo(boolean activo) {
-		this.activo = activo;
+		this.Activo = activo;
 	}
 	
 	

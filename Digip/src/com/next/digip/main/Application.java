@@ -1,9 +1,5 @@
 package com.next.digip.main;
 
-import java.io.IOException;
-
-import com.next.digip.controller.ControllerLocal;
-import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.view.Main;
 
 public class Application {

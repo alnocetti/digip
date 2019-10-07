@@ -1,9 +1,6 @@
 package com.next.digip.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
@@ -20,10 +17,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.next.digip.controller.ControllerLocal;
 import com.next.digip.dbf.reader.Reader;
 import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.model.Articulo;
+import com.next.digip.model.Cliente;
+import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.rest.RestClient;
 import com.next.digip.rest.WebResponse;
 
@@ -34,7 +32,6 @@ public class WindowSync extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private ControllerLocal controller = ControllerLocal.getInstance();
 	private Reader dbfReader;
 
 	
@@ -128,7 +125,7 @@ public class WindowSync extends JFrame implements ActionListener{
 							
 						boolean existe = false;
 						
-						if (i <= 12) {
+						if (i <= 1) {
 							
 						this.textAreaResponse.append("--> Enviando articulo:" + articulo.getCodigo() + " - " + articulo.getDescripcion() + "\n");
 
@@ -145,14 +142,12 @@ public class WindowSync extends JFrame implements ActionListener{
 						if (existe) {
 
 							WebResponse webResponse = this.restClient.putArticulo(articulo);
-							this.textAreaResponse.setBackground(Color.red);
 							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
 
 							responses.add(webResponse);
 							
 						}else {
 							
-							this.textAreaResponse.setBackground(Color.white);
 							WebResponse webResponse = this.restClient.postArticulo(articulo);
 							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
 
@@ -173,8 +168,144 @@ public class WindowSync extends JFrame implements ActionListener{
 				}
 				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				this.textAreaResponse.append("**** Finalizo. ****\n");
+		        JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos", JOptionPane.INFORMATION_MESSAGE);
+		        break;
+		        
+			case 2:
+				
+				try {
+					
+					contentPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					
+					this.textAreaResponse.append("**** Sincronizando clientes ****\n");
+					
+					this.textAreaResponse.append("--> Bajando clientes \n");
+					
+					List<Cliente> clientesPatagonia = this.restClient.getClientes();
+					
+					this.textAreaResponse.append("--> Leyendo clientes\n");
+					
+					List<Cliente> clientes = this.dbfReader.readClientes();
+					
+					List<WebResponse> responses = new ArrayList<WebResponse>();
+					
+					int i = 0;
+							
+					for (Cliente cliente : clientes) {
+							
+						boolean existe = false;
+						
+						if (i <= 1) {
+							
+						this.textAreaResponse.append("--> Enviando clientes:" + cliente.getCodigo() + " - " + cliente.getDescripcion() + "\n");
+
+						for(Cliente clientePatagonia : clientesPatagonia) {
+
+							if (cliente.getCodigo().equals(clientePatagonia.getCodigo())) {
+								
+								existe = true;
+								break;
+								
+							}
+						}
+						
+						if (existe) {
+
+							WebResponse webResponse = this.restClient.putCliente(cliente);
+							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+							responses.add(webResponse);
+							
+						}else {
+							
+							WebResponse webResponse = this.restClient.postCliente(cliente);
+							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+							responses.add(webResponse);
+						}
+						
+						}
+						i = i + 1;	
+							
+					}
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ExceptionRestClient e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				this.textAreaResponse.append("**** Finalizo. ****\n");
+		        JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos", JOptionPane.INFORMATION_MESSAGE);
+		        break;
+				
+		        
+			case 3:
+				
+				try {
+					
+					contentPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					
+					this.textAreaResponse.append("**** Sincronizando ubicaciones ****\n");
+					
+	//				this.textAreaResponse.append("--> Bajando ubicaciones \n");
+					
+	//				List<ClienteUbicacion> clientesUbicacionesPatagonia = this.restClient.getUbicaciones();
+					
+					this.textAreaResponse.append("--> Leyendo clientes\n");
+					
+					List<ClienteUbicacion> clientesUbicaciones = this.dbfReader.readClientesUbicacion();
+					
+					List<WebResponse> responses = new ArrayList<WebResponse>();
+					
+					int i = 0;
+							
+					for (ClienteUbicacion clienteUbicacion : clientesUbicaciones) {
+													
+						if (i <= 1) {
+							
+						this.textAreaResponse.append("--> Enviando clientes:" + clienteUbicacion.getCodigo() + " - " + clienteUbicacion.getDescripcion() + "\n");
+
+						ClienteUbicacion clienteUbicacionPatagonia = this.restClient.getClienteUbicacion(clienteUbicacion.getCodigo());
+						
+						if (clienteUbicacionPatagonia != null) {
+						
+							WebResponse webResponse = this.restClient.putClienteUbicacion(clienteUbicacion);
+							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+							responses.add(webResponse);
+							
+						} else {
+							
+							WebResponse webResponse = this.restClient.postClienteUbicacion(clienteUbicacion);
+							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+							responses.add(webResponse);
+							
+						}
+						
+						}
+						i = i + 1;	
+							
+					}
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ExceptionRestClient e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				this.textAreaResponse.append("**** Finalizo. ****\n");
+		        JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos", JOptionPane.INFORMATION_MESSAGE);
+		        break;
+				
+				
 			}
-			
+				
 		}
 	}
 

@@ -1,11 +1,11 @@
 package com.next.digip.model;
 
 public class Cliente {
-	private String codigo;
-	private String descripcion;
-	private String identificadorFiscal;
-	private boolean activo;
-	private ClienteUbicacion clienteUbicacion;
+	private String Codigo;
+	private String Descripcion;
+	private String IdentificadorFiscal;
+	private boolean Activo;
+	private ClienteUbicacion ClienteUbicacion;
 	
 	public Cliente() {
 		super();
@@ -13,43 +13,43 @@ public class Cliente {
 	}
 
 	public String getCodigo() {
-		return codigo;
+		return Codigo;
 	}
 
 	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+		this.Codigo = codigo;
 	}
 
 	public String getDescripcion() {
-		return descripcion;
+		return Descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+		this.Descripcion = descripcion;
 	}
 
 	public String getIdentificadorFiscal() {
-		return identificadorFiscal;
+		return IdentificadorFiscal;
 	}
 
 	public void setIdentificadorFiscal(String identificadorFiscal) {
-		this.identificadorFiscal = identificadorFiscal;
+		this.IdentificadorFiscal = identificadorFiscal;
 	}
 
 	public boolean isActivo() {
-		return activo;
+		return Activo;
 	}
 
 	public void setActivo(boolean activo) {
-		this.activo = activo;
+		this.Activo = activo;
 	}
 
 	public ClienteUbicacion getClienteUbicacion() {
-		return clienteUbicacion;
+		return ClienteUbicacion;
 	}
 
 	public void setClienteUbicacion(ClienteUbicacion clienteUbicacion) {
-		this.clienteUbicacion = clienteUbicacion;
+		this.ClienteUbicacion = clienteUbicacion;
 	}
 
 	
