@@ -20,6 +20,8 @@ import javax.swing.border.EmptyBorder;
 import com.next.digip.dbf.reader.Reader;
 import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.model.Articulo;
+import com.next.digip.model.ArticuloUnidadMedida;
+import com.next.digip.model.ArticuloUnidadMedidaCodigo;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.rest.RestClient;
@@ -75,6 +77,7 @@ public class WindowSync extends JFrame implements ActionListener{
 		comboBox.addItem("Pedidos");
 		comboBox.addItem("Detalle pedidos");
 		comboBox.addItem("Stock");
+		comboBox.addItem("Articulos completo");
 		contentPane.add(comboBox);
 		comboBox.setSelectedIndex(0);
 		comboBox.addActionListener(this);
@@ -171,6 +174,225 @@ public class WindowSync extends JFrame implements ActionListener{
 		        JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos", JOptionPane.INFORMATION_MESSAGE);
 		        break;
 		        
+		        
+			case 7:
+				
+				try {
+					
+					contentPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					
+					this.textAreaResponse.append("**** Sincronizando articulos ****\n");
+					
+					this.textAreaResponse.append("--> Bajando articulos\n");
+					
+					List<Articulo> articulosPatagonia = this.restClient.getArticulos();
+					
+					this.textAreaResponse.append("--> Leyendo articulos\n");
+					
+					List<Articulo> articulos = this.dbfReader.readArticulosCompleto();
+					
+					List<WebResponse> responses = new ArrayList<WebResponse>();
+					
+					boolean existe = false;
+				
+					for (Articulo articulo : articulos) {
+						
+						existe = false;
+						
+						this.textAreaResponse.append("--> Enviando articulo:" + articulo.getCodigo() + " - " + articulo.getDescripcion() + "\n");
+
+						for(Articulo articuloPatagonia : articulosPatagonia) {
+
+							if (articulo.getCodigo().equals(articuloPatagonia.getCodigo())) {
+								
+								existe = true;
+								break;
+								
+							}
+						}
+						
+						if (existe) {
+
+							WebResponse webResponse = this.restClient.putArticulo(articulo);
+							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+							responses.add(webResponse);
+							
+						}else {
+							
+							WebResponse webResponse = this.restClient.postArticulo(articulo);
+							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+							responses.add(webResponse);
+						}
+						
+						// envia unidades de medida de articulo
+						
+						List<ArticuloUnidadMedida>unidadesMedida = articulo.getUnidadesMedida();
+						
+						List<ArticuloUnidadMedida>unidadesMedidaPatagonia = this.restClient.getUnidadesMedida(articulo.getCodigo());
+						
+						for (ArticuloUnidadMedida um : unidadesMedida) {
+							
+							existe = false;
+							
+							this.textAreaResponse.append("--> Enviando unidad de medida ("+ Integer.toString(um.getUnidadMedida_Id()) +") de articulo:"
+															+ articulo.getCodigo() + " - " + articulo.getDescripcion() + "\n");
+
+							for(ArticuloUnidadMedida umPatagonia : unidadesMedidaPatagonia) {
+
+								if (um.getUnidadMedida_Id() == umPatagonia.getUnidadMedida_Id()) {
+									
+									existe = true;
+									break;
+									
+								}
+							}
+							
+							if (existe) {
+
+								WebResponse webResponse = this.restClient.putArticuloUnidadMedida(articulo.getCodigo(), um);
+								this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+								responses.add(webResponse);
+								
+							}else {
+								
+								WebResponse webResponse = this.restClient.postArticuloUnidadMedida(articulo.getCodigo(), um);
+								this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+								responses.add(webResponse);
+							}
+							
+							// envia codigos de unidades de medida del articulo
+							
+							List<ArticuloUnidadMedidaCodigo> unidadesMedidaCodigo = um.getUnidadMedidaCodigos();
+							
+							List<ArticuloUnidadMedidaCodigo> unidadesMedidaCodigoPatagonia = this.restClient.getUnidadesMedidaCodigo(articulo.getCodigo(), um.getUnidadMedida_Id());
+							
+							for (ArticuloUnidadMedidaCodigo umc : unidadesMedidaCodigo) {
+								
+								existe = false;
+								
+								this.textAreaResponse.append("--> Enviando codigo de unidad de medida ("+ Integer.toString(um.getUnidadMedida_Id()) +") de articulo:"
+																+ articulo.getCodigo() + " - " + articulo.getDescripcion() + "\n");
+
+								for(ArticuloUnidadMedidaCodigo umcPatagonia : unidadesMedidaCodigoPatagonia) {
+
+									if (umc.getCodigo().equals(umcPatagonia.getCodigo())) {
+										
+										existe = true;
+										break;
+										
+									}
+								}
+								
+								if (existe) {
+									// si existe no hacer nada, no volver a enviar
+//									WebResponse webResponse = this.restClient.putArticuloUnidadMedidaCodigo(articulo.getCodigo(), um.getUnidadMedida_Id(), umc);
+//									this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+//
+//									responses.add(webResponse);
+									this.textAreaResponse.append("Ya existe codigo en unidad de medida\n");
+									
+								}else {
+									
+									WebResponse webResponse = this.restClient.postArticuloUnidadMedidaCodigo(articulo.getCodigo(), um.getUnidadMedida_Id(), umc);
+									this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+
+									responses.add(webResponse);
+								}
+							}
+							
+						}
+						
+						this.textAreaResponse.append("---------------------------------------------------------------------------------------------------------------------\n");
+							
+					}
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ExceptionRestClient e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				this.textAreaResponse.append("**** Finalizo. ****\n");
+		        JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos", JOptionPane.INFORMATION_MESSAGE);
+		        break;
+		        
+		        
+//			case 1:
+//				
+//				try {
+//					
+//					contentPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+//					
+//					this.textAreaResponse.append("**** Sincronizando unidades de medida ****\n");
+//					
+//					this.textAreaResponse.append("--> Bajando unidades medida\n");
+//					
+//					List<ArticuloUnidadMedida> unidadesMedidaPatagonia = this.restClient.getUnidadesMedida();
+//					
+//					this.textAreaResponse.append("--> Leyendo unidades de medida\n");
+//					
+//					List<ArticuloUnidadMedida> unidadesMedida = this.dbfReader.readUnidadesMedida();
+//					
+//					List<WebResponse> responses = new ArrayList<WebResponse>();
+//					
+//					int i = 0;
+//							
+//					for (ArticuloUnidadMedida articuloUnidadMedida : unidadesMedida) {
+//							
+//						boolean existe = false;
+//						
+//						if (i <= 4) {
+//							
+//						this.textAreaResponse.append("--> Enviando unidad medida:" + Integer.toString(articuloUnidadMedida.getUnidadMedida_Id()) + "\n");
+//
+//						for(ArticuloUnidadMedida unidadMedidaPatagonia : unidadesMedidaPatagonia) {
+//
+//							if (articuloUnidadMedida.getUnidadMedida_Id() == unidadMedidaPatagonia.getUnidadMedida_Id()) {
+//								
+//								existe = true;
+//								break;
+//								
+//							}
+//						}
+//						
+//						if (existe) {
+//
+//							WebResponse webResponse = this.restClient.putArticuloUnidadMedida(articuloUnidadMedida);
+//							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+//
+//							responses.add(webResponse);
+//							
+//						}else {
+//							
+//							WebResponse webResponse = this.restClient.postArticuloUnidadMedida(articuloUnidadMedida);
+//							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
+//
+//							responses.add(webResponse);
+//						}
+//						
+//						}
+//						i = i + 1;	
+//							
+//					}
+//					
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (ExceptionRestClient e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//				this.textAreaResponse.append("**** Finalizo. ****\n");
+//		        JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos", JOptionPane.INFORMATION_MESSAGE);
+//		        break;
+//		        
 			case 2:
 				
 				try {
@@ -195,7 +417,7 @@ public class WindowSync extends JFrame implements ActionListener{
 							
 						boolean existe = false;
 						
-						if (i <= 1) {
+						//if (i <= 1) {
 							
 						this.textAreaResponse.append("--> Enviando clientes:" + cliente.getCodigo() + " - " + cliente.getDescripcion() + "\n");
 
@@ -227,7 +449,7 @@ public class WindowSync extends JFrame implements ActionListener{
 						}
 						i = i + 1;	
 							
-					}
+					//}
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -264,14 +486,14 @@ public class WindowSync extends JFrame implements ActionListener{
 							
 					for (ClienteUbicacion clienteUbicacion : clientesUbicaciones) {
 													
-						if (i <= 1) {
+			//			if (i <= 1) {
 							
 						this.textAreaResponse.append("--> Enviando clientes:" + clienteUbicacion.getCodigo() + " - " + clienteUbicacion.getDescripcion() + "\n");
 
-						ClienteUbicacion clienteUbicacionPatagonia = this.restClient.getClienteUbicacion(clienteUbicacion.getCodigo());
+						List<ClienteUbicacion> clienteUbicacionPatagonia = this.restClient.getClienteUbicacion(clienteUbicacion.getCodigo());
 						
 						if (clienteUbicacionPatagonia != null) {
-						
+							
 							WebResponse webResponse = this.restClient.putClienteUbicacion(clienteUbicacion);
 							this.textAreaResponse.append("Respuesta:" + webResponse.getResponseMessage() + "\n");
 
@@ -289,7 +511,7 @@ public class WindowSync extends JFrame implements ActionListener{
 						}
 						i = i + 1;	
 							
-					}
+				//	}
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -302,6 +524,8 @@ public class WindowSync extends JFrame implements ActionListener{
 				this.textAreaResponse.append("**** Finalizo. ****\n");
 		        JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos", JOptionPane.INFORMATION_MESSAGE);
 		        break;
+		        
+		        
 				
 				
 			}

@@ -3,19 +3,17 @@ package com.next.digip.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.next.digip.enums.UnidadMedida;
-
 public class ArticuloUnidadMedida {
 	
-	private UnidadMedida UnidadMedida;
+	private int UnidadMedida_Id;
 	private int Unidades;
 	private boolean EsUnidadDeVenta;
 	private boolean EsUnidadMenor;
 	private boolean EsUnidadConversion;
-	private float Alto;
-	private float Ancho;
-	private float Profundo;
-	private float Peso;
+	private int Alto;
+	private int Ancho;
+	private int Profundo;
+	private int Peso;
 	private boolean Activo;
 	private List<ArticuloUnidadMedidaCodigo> UnidadMedidaCodigos;
 	
@@ -23,14 +21,6 @@ public class ArticuloUnidadMedida {
 		super();
 		this.UnidadMedidaCodigos = new ArrayList<ArticuloUnidadMedidaCodigo>();
 		// TODO Auto-generated constructor stub
-	}
-
-	public UnidadMedida getUnidadMedida() {
-		return UnidadMedida;
-	}
-
-	public void setUnidadMedida(UnidadMedida unidadMedida) {
-		this.UnidadMedida = unidadMedida;
 	}
 
 	public int getUnidades() {
@@ -69,31 +59,31 @@ public class ArticuloUnidadMedida {
 		return Alto;
 	}
 
-	public void setAlto(float alto) {
+	public void setAlto(int alto) {
 		this.Alto = alto;
 	}
 
-	public float getAncho() {
+	public int getAncho() {
 		return Ancho;
 	}
 
-	public void setAncho(float ancho) {
+	public void setAncho(int ancho) {
 		this.Ancho = ancho;
 	}
 
-	public float getProfundo() {
+	public int getProfundo() {
 		return Profundo;
 	}
 
-	public void setProfundo(float profundo) {
+	public void setProfundo(int profundo) {
 		this.Profundo = profundo;
 	}
 
-	public float getPeso() {
+	public int getPeso() {
 		return Peso;
 	}
 
-	public void setPeso(float peso) {
+	public void setPeso(int peso) {
 		this.Peso = peso;
 	}
 
@@ -115,6 +105,14 @@ public class ArticuloUnidadMedida {
 	
 	public void addUnidadMedidaCodigo(ArticuloUnidadMedidaCodigo unidadMedidaCodigo) {
 		this.UnidadMedidaCodigos.add(unidadMedidaCodigo);
+	}
+
+	public int getUnidadMedida_Id() {
+		return UnidadMedida_Id;
+	}
+
+	public void setUnidadMedida_Id(int unidadMedida_Id) {
+		UnidadMedida_Id = unidadMedida_Id;
 	}
 	
 }
