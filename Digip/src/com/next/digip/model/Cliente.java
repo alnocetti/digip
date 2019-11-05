@@ -1,11 +1,13 @@
 package com.next.digip.model;
 
+import java.util.List;
+
 public class Cliente {
 	private String Codigo;
 	private String Descripcion;
 	private String IdentificadorFiscal;
 	private boolean Activo;
-	private ClienteUbicacion ClienteUbicacion;
+	private List<ClienteUbicacion> ClienteUbicacion;
 	
 	public Cliente() {
 		super();
@@ -44,11 +46,11 @@ public class Cliente {
 		this.Activo = activo;
 	}
 
-	public ClienteUbicacion getClienteUbicacion() {
+	public List<ClienteUbicacion> getClienteUbicacion() {
 		return ClienteUbicacion;
 	}
 
-	public void setClienteUbicacion(ClienteUbicacion clienteUbicacion) {
+	public void setClienteUbicacion(List<ClienteUbicacion> clienteUbicacion) {
 		this.ClienteUbicacion = clienteUbicacion;
 	}
 

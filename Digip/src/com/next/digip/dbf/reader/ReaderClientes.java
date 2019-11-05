@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
@@ -12,7 +13,7 @@ import com.linuxense.javadbf.DBFUtils;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
 
-public class ReaderClientes {
+public class ReaderClientes extends Observable{
 
 	private DBFReader reader;
 
@@ -123,5 +124,89 @@ public class ReaderClientes {
 		return clientesUbicacion;
 
 	}
+	
+	public List<Cliente> readClientesCompleto() {
+
+		List<Cliente> clientes = new ArrayList<Cliente>();
+
+		reader = null;
+
+		try {
+
+			// create a DBFReader object
+			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/cccuenta.dbf"));
+
+			DBFRow row;
+
+			int registro = 0;
+			int cantRegistros = reader.getRecordCount();
+			
+			while ((row = reader.nextRow()) != null && registro <= 3) {
+				registro ++;
+				
+				setChanged();
+				notifyObservers("Leyendo clientes: " + Integer.toString(registro) + " de " + Integer.toString(cantRegistros) + "\n");
+			
+				Cliente cliente = new Cliente();
+				
+				List<ClienteUbicacion> ubicaciones = new  ArrayList<ClienteUbicacion>();
+				
+				ClienteUbicacion clienteUbicacion = new  ClienteUbicacion();
+
+				cliente.setCodigo(row.getString("CLICODIGO"));
+
+				cliente.setDescripcion(row.getString("CLIRAZSOC"));
+
+				cliente.setIdentificadorFiscal(Integer.toString(row.getInt("CLICDIVA")));
+
+				if (row.getString("CLIFECBAJA") == null) {
+					cliente.setActivo(true);
+					clienteUbicacion.setActivo(true);
+
+				} else {
+					cliente.setActivo(false);
+					clienteUbicacion.setActivo(false);
+
+				}
+				
+				clienteUbicacion.setCodigo(row.getString("CLICODIGO"));
+
+				clienteUbicacion.setDescripcion("Direccion de " + row.getString("CLIRAZSOC"));
+
+				clienteUbicacion.setCodigoCliente(row.getString("CLICODIGO"));
+
+				clienteUbicacion.setDireccion(row.getString("CLIDOMICI"));
+
+				clienteUbicacion.setProvincia(Integer.toString(row.getInt("CLIPROVIN")));
+
+				clienteUbicacion.setLocalidad(row.getString("CLILOCALI"));
+
+				clienteUbicacion.setInformacionAdicional(row.getString("CLIOBSERVA"));
+
+				clienteUbicacion.setLatitud(row.getString("CLILATI"));
+
+				clienteUbicacion.setLongitud(row.getString("CLILONG"));
+				
+				ubicaciones.add(clienteUbicacion);
+				
+				cliente.setClienteUbicacion(ubicaciones);
+				
+				clientes.add(cliente);
+
+			}
+
+		} catch (DBFException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} finally {
+			DBFUtils.close(reader);
+		}
+
+		return clientes;
+
+	}
+
+	
 
 }

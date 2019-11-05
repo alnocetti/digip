@@ -13,6 +13,8 @@ import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
+import com.next.digip.model.Cliente;
+import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.model.Pedido;
 import com.next.digip.rest.RestClient;
 import com.next.digip.rest.WebResponse;
@@ -43,6 +45,7 @@ public class ControllerLocal extends Observable implements Observer{
 		this.readerClientes = new ReaderClientes();
 		this.readerPedidos = new ReaderPedidos();
 		readerArticulos.addObserver(this);
+		readerClientes.addObserver(this);
 
 		// TODO Auto-generated constructor stub
 	}
@@ -211,6 +214,109 @@ public class ControllerLocal extends Observable implements Observer{
 		notifyObservers(estado);
 		return respuestas;
 		
+	}
+	
+	public List<WebResponse> sincronizarClientes() throws IOException, ExceptionRestClient{
+		
+		System.out.println("<-- Sincronizando clientes");
+		
+		this.estado = "***Sincronizando clientes***\n";
+		setChanged();
+		notifyObservers(estado);
+
+		this.estado = "Descargando clientes\n";
+		setChanged();
+		notifyObservers(estado);
+		
+		List<Cliente> clientesPatagonia = this.restClient.getClientes();
+		
+		this.estado = "Leyendo clientes\n";
+		setChanged();
+		notifyObservers(estado);
+		
+		List<Cliente> clientes = this.readerClientes.readClientesCompleto();
+		
+		List<WebResponse> respuestas = new ArrayList<WebResponse>();
+		
+		boolean existe = false;
+				
+		for (Cliente cliente : clientes) {
+			
+			existe = false;
+			
+			this.estado = "Enviando cliente: " + cliente.getCodigo() + "-" + cliente.getDescripcion() + "\n";
+			setChanged();
+			notifyObservers(estado);
+			
+			for(Cliente clientePatagonia : clientesPatagonia) {
+				
+				if (cliente.getCodigo().equals(clientePatagonia.getCodigo())) {
+					
+					existe = true;
+					break;
+
+				}
+					
+			}
+			
+			if (existe) {
+				
+				WebResponse webResponse = this.restClient.putCliente(cliente);
+				respuestas.add(webResponse);
+				
+			}else {
+				
+				WebResponse webResponse = this.restClient.postCliente(cliente);
+				respuestas.add(webResponse);
+			}
+			
+			// envia ubicacion del cliente
+			
+			List<ClienteUbicacion> ubicacion = cliente.getClienteUbicacion();
+			
+			List<ClienteUbicacion> ubicacionPatagonia = this.restClient.getClienteUbicacion(cliente.getCodigo());
+						
+			for (ClienteUbicacion ub : ubicacion) {
+				
+				existe = false;
+				
+				this.estado = "    Enviando ubicacion " + ub.getCodigo() + "\n";
+				setChanged();
+				notifyObservers(estado);
+				
+				for(ClienteUbicacion ubPatagonia : ubicacionPatagonia) {
+
+					if (ub.getCodigo().equals(ubPatagonia.getCodigo())) {
+						
+						existe = true;
+						break;
+						
+					}
+				}
+				
+				if (existe) {
+
+					WebResponse webResponse = this.restClient.putClienteUbicacion(cliente.getCodigo(), ub);
+
+					respuestas.add(webResponse);
+					
+				}else {
+					
+					WebResponse webResponse = this.restClient.postClienteUbicacion(cliente.getCodigo(), ub);
+
+					respuestas.add(webResponse);
+				}
+				
+
+				
+			}
+		}
+			
+			this.estado = "_______________________________________________________________________\n\n";
+			setChanged();
+			notifyObservers(estado);
+		
+		return respuestas;
 	}
 	
 	

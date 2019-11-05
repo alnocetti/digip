@@ -1211,7 +1211,7 @@ public class RestClient {
 
 	}
 	
-	public WebResponse postClienteUbicacion(ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
+	public WebResponse postClienteUbicacion(String codigoCliente, ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
 		
 		WebResponse webResponse = new WebResponse();
 		
@@ -1226,7 +1226,7 @@ public class RestClient {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 					
 			
-			url = new URL("http://api.patagoniawms.com/v1/Cliente/" + clienteUbicacion.getCodigo() + "/ClientesUbicaciones" );//your url i.e fetch data from .
+			url = new URL("http://api.patagoniawms.com/v1/Cliente/" + codigoCliente + "/ClientesUbicaciones" );//your url i.e fetch data from .
 			
 			conn = (HttpURLConnection) url.openConnection();
 			
@@ -1300,7 +1300,7 @@ public class RestClient {
 
 	}
 	
-	public WebResponse putClienteUbicacion(ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
+	public WebResponse putClienteUbicacion(String codigoCliente, ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
 		
 		WebResponse webResponse = new WebResponse();
 		
@@ -1315,7 +1315,7 @@ public class RestClient {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 					
 			
-			url = new URL("http://api.patagoniawms.com/v1/Cliente/" + clienteUbicacion.getCodigo() + "/ClientesUbicaciones/" + clienteUbicacion.getCodigo());//your url i.e fetch data from .
+			url = new URL("http://api.patagoniawms.com/v1/Cliente/" + codigoCliente + "/ClientesUbicaciones/" + clienteUbicacion.getCodigo());//your url i.e fetch data from .
 			
 			conn = (HttpURLConnection) url.openConnection();
 			
