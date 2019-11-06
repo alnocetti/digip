@@ -9,7 +9,6 @@ import java.util.Observer;
 import com.next.digip.dbf.reader.ReaderArticulos;
 import com.next.digip.dbf.reader.ReaderClientes;
 import com.next.digip.dbf.reader.ReaderPedidos;
-import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
@@ -55,7 +54,7 @@ public class ControllerLocal extends Observable implements Observer{
 		return this.restClient.getArticulos();
 	}
 	
-	public List<WebResponse> postArticulos() throws IOException, ExceptionRestClient{
+	public List<WebResponse> postArticulos() throws IOException{
 		System.out.println("<-- postArticulos");
 		
 		List<Articulo> articulos = this.readerArticulos.readArticulos();
@@ -72,7 +71,7 @@ public class ControllerLocal extends Observable implements Observer{
 		return respuestas;
 	}
 	
-	public List<WebResponse> sincronizarArticulos() throws IOException, ExceptionRestClient { 
+	public List<WebResponse> sincronizarArticulos() throws IOException { 
 		
 		System.out.println("<-- Sincronizando articulos");
 		
@@ -216,7 +215,7 @@ public class ControllerLocal extends Observable implements Observer{
 		
 	}
 	
-	public List<WebResponse> sincronizarClientes() throws IOException, ExceptionRestClient{
+	public List<WebResponse> sincronizarClientes() throws IOException {
 		
 		System.out.println("<-- Sincronizando clientes");
 		
@@ -320,7 +319,7 @@ public class ControllerLocal extends Observable implements Observer{
 	}
 	
 	
-	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException, ExceptionRestClient{
+	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException {
 		System.out.println("<-- testWebService()");
 		return this.restClient.testWebService(uri, method);
 	}
@@ -330,7 +329,7 @@ public class ControllerLocal extends Observable implements Observer{
 		return restClient.getPedidos();
 	}
 	
-	public void postPedidos() throws IOException, ExceptionRestClient {
+	public void postPedidos() throws IOException {
 		System.out.println("<-- postPedidos()");
 		 
 		List<Pedido> pedidos = this.readerPedidos.readPedidos();

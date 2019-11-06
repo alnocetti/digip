@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.next.digip.dbf.reader.Reader;
-import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
@@ -34,7 +33,7 @@ public class RestClient {
 		// TODO Auto-generated constructor stub
 	}
 		
-	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException, ExceptionRestClient{
+	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException{
 			
 //		try {
 			WebResponse webResponse = new WebResponse();
@@ -68,7 +67,6 @@ public class RestClient {
 					while ((line = br.readLine()) != null) {
 						response += line;
 					}
-					throw new ExceptionRestClient(response);
 				}
 				throw new RuntimeException("Failed : HTTP Error code : "
 						+ conn.getResponseCode() + "-" + conn.getResponseMessage());
@@ -489,7 +487,7 @@ public class RestClient {
 		
 	}
 	
-	public WebResponse postArticulo(Articulo articulo) throws IOException, ExceptionRestClient {
+	public WebResponse postArticulo(Articulo articulo) throws IOException {
 				
 		WebResponse webResponse = new WebResponse();
 		
@@ -577,7 +575,7 @@ public class RestClient {
 
 	}
 	
-	public WebResponse putArticulo(Articulo articulo) throws IOException, ExceptionRestClient {
+	public WebResponse putArticulo(Articulo articulo) throws IOException {
 				
 		WebResponse webResponse = new WebResponse();
 		
@@ -666,7 +664,7 @@ public class RestClient {
 
 	}
 	
-	public WebResponse postArticuloUnidadMedida(String codigoArticulo, ArticuloUnidadMedida articuloUnidadMedida) throws IOException, ExceptionRestClient {
+	public WebResponse postArticuloUnidadMedida(String codigoArticulo, ArticuloUnidadMedida articuloUnidadMedida) throws IOException {
 				
 		WebResponse webResponse = new WebResponse();
 		
@@ -761,7 +759,7 @@ public class RestClient {
 
 	}
 	
-	public WebResponse putArticuloUnidadMedida(String codigoArticulo, ArticuloUnidadMedida articuloUnidadMedida) throws IOException, ExceptionRestClient {
+	public WebResponse putArticuloUnidadMedida(String codigoArticulo, ArticuloUnidadMedida articuloUnidadMedida) throws IOException {
 				
 		WebResponse webResponse = new WebResponse();
 		
@@ -854,7 +852,7 @@ public class RestClient {
 	
 	
 	
-	public WebResponse postArticuloUnidadMedidaCodigo(String codigoArticulo, int id_unidadMedida, ArticuloUnidadMedidaCodigo articuloUnidadMedidaCodigo) throws IOException, ExceptionRestClient {
+	public WebResponse postArticuloUnidadMedidaCodigo(String codigoArticulo, int id_unidadMedida, ArticuloUnidadMedidaCodigo articuloUnidadMedidaCodigo) throws IOException {
 				
 		WebResponse webResponse = new WebResponse();
 
@@ -943,7 +941,7 @@ public class RestClient {
 		
 	}
 	
-	public WebResponse putArticuloUnidadMedidaCodigo(String codigoArticulo, int id_unidadMedida, ArticuloUnidadMedidaCodigo articuloUnidadMedidaCodigo) throws IOException, ExceptionRestClient {
+	public WebResponse putArticuloUnidadMedidaCodigo(String codigoArticulo, int id_unidadMedida, ArticuloUnidadMedidaCodigo articuloUnidadMedidaCodigo) throws IOException {
 		
 		WebResponse webResponse = new WebResponse();
 		
@@ -1034,7 +1032,7 @@ public class RestClient {
 
 	}	
 	
-	public WebResponse postCliente(Cliente cliente) throws IOException, ExceptionRestClient {
+	public WebResponse postCliente(Cliente cliente) throws IOException {
 				
 		WebResponse webResponse = new WebResponse();
 		
@@ -1122,7 +1120,7 @@ public class RestClient {
 
 	}
 		
-	public WebResponse putCliente(Cliente cliente) throws IOException, ExceptionRestClient {
+	public WebResponse putCliente(Cliente cliente) throws IOException {
 		
 		WebResponse webResponse = new WebResponse();
 		
@@ -1211,7 +1209,7 @@ public class RestClient {
 
 	}
 	
-	public WebResponse postClienteUbicacion(String codigoCliente, ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
+	public WebResponse postClienteUbicacion(String codigoCliente, ClienteUbicacion clienteUbicacion) throws IOException {
 		
 		WebResponse webResponse = new WebResponse();
 		
@@ -1300,7 +1298,7 @@ public class RestClient {
 
 	}
 	
-	public WebResponse putClienteUbicacion(String codigoCliente, ClienteUbicacion clienteUbicacion) throws IOException, ExceptionRestClient {
+	public WebResponse putClienteUbicacion(String codigoCliente, ClienteUbicacion clienteUbicacion) throws IOException {
 		
 		WebResponse webResponse = new WebResponse();
 		
@@ -1396,7 +1394,7 @@ public class RestClient {
 		return pedidos;
 	}
 
-	public void postPedidos(Pedido pedido) throws IOException, ExceptionRestClient {
+	public void postPedidos(Pedido pedido) throws IOException {
 
 	}
 

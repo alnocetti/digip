@@ -22,7 +22,6 @@ import javax.swing.border.EmptyBorder;
 import com.next.digip.controller.ControllerLocal;
 import com.next.digip.dbf.reader.ReaderArticulos;
 import com.next.digip.dbf.reader.ReaderClientes;
-import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.rest.RestClient;
@@ -113,9 +112,6 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (ExceptionRestClient e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
 				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos",
@@ -127,9 +123,6 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 				try {
 					ControllerLocal.getInstance().sincronizarClientes();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ExceptionRestClient e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (RuntimeException e1) {

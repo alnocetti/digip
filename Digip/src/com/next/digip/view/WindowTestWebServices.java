@@ -21,7 +21,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.next.digip.controller.ControllerLocal;
-import com.next.digip.exceptions.ExceptionRestClient;
 import com.next.digip.rest.WebResponse;
 
 public class WindowTestWebServices extends JFrame implements ActionListener {
@@ -197,7 +196,7 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 					}
 				}
 				
-			} catch (IOException | RuntimeException | ExceptionRestClient e1) {
+			} catch (IOException | RuntimeException e1) {
 				// TODO Auto-generated catch block
 				
 //				this.textAreaResponse.setText(e1.toString());
