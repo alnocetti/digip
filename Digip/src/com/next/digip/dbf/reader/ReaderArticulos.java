@@ -1,10 +1,14 @@
 package com.next.digip.dbf.reader;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+
+import org.yasas.xbase4j.XBase;
+import org.yasas.xbase4j.XBaseFile;
 
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
@@ -92,20 +96,22 @@ public class ReaderArticulos extends Observable{
 		List<Articulo> articulos = new ArrayList<Articulo>();
 
 		List<ArticuloUnidadMedida> unidadesMedida = new ArrayList<ArticuloUnidadMedida>();
-
+		XBaseFile writer = null;
 		DBFReader reader = null;
-
 		try {
 
 			// create a DBFReader object
 			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/dtitems.dbf"));
+			writer = new XBase().open(new File("//192.168.90.2/visual/dtitems.dbf"));
 
+			
 			DBFRow row;
 
 			int registro = 0;
 			int cantRegistros = reader.getRecordCount();
 
-			while ((row = reader.nextRow()) != null) {
+			while ((row = reader.nextRow()) != null && registro <= 4) {
+				
 				registro++;
 				
 				this.cantidadLeida = (registro / cantRegistros) * 100;
@@ -113,24 +119,26 @@ public class ReaderArticulos extends Observable{
 				notifyObservers("Leyendo articulos: " + Integer.toString(registro) + " de " + Integer.toString(cantRegistros) + "\n");
 			
 				// ITPEDIDO == "S" .AND. SUBSTR(CODIGO,1,1) # "C" .AND. GRUPO # 90
-				boolean validacion1 = false;
-
-				boolean validacion2 = false;
-
-				boolean validacion3 = false;
 
 				Articulo articulo = new Articulo();
 
 				// Valida si se tiene que enviar el producto
-				if (row.getString("ITPEDIDO").equals("S"))
-					validacion1 = true;
+				if (!row.getString("ITPEDIDO").equals("S"))
+					continue;
 
-				if (!row.getString("CODIGO").substring(0, 1).equals("C"))
-					validacion2 = true;
+				if (row.getString("CODIGO").substring(0, 1).equals("C"))
+					continue;
 
-				if (row.getInt("GRUPO") != 90)
-					validacion3 = true;
-
+				if (row.getInt("GRUPO") == 90)
+					continue;
+				
+				if (!row.getString("ITNOVEDAD").equals("S"))
+					continue;
+				
+				//actualizo novedad
+				writer.go(registro - 1);
+				writer.setValue("ITNOVEDAD", "N");
+				
 				articulo.setCodigo(row.getString("CODIGO"));
 				articulo.setDescripcion(row.getString("DESCRIPCIO"));
 				articulo.setDiasVidaUtil(365);
@@ -168,9 +176,8 @@ public class ReaderArticulos extends Observable{
 
 				articulo.setUnidadesMedida(unidadesMedida);
 
-				if (validacion1 && validacion2 && validacion3)
-					articulos.add(articulo);
-
+				articulos.add(articulo);
+				
 			}
 
 		} catch (DBFException e) {
@@ -179,8 +186,9 @@ public class ReaderArticulos extends Observable{
 			e1.printStackTrace();
 		} finally {
 			DBFUtils.close(reader);
+			writer.closeQuietly();
 		}
-
+		
 		return articulos;
 
 	}

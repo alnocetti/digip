@@ -6,8 +6,6 @@ import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -20,12 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.next.digip.controller.ControllerLocal;
-import com.next.digip.dbf.reader.ReaderArticulos;
-import com.next.digip.dbf.reader.ReaderClientes;
-import com.next.digip.model.Cliente;
-import com.next.digip.model.ClienteUbicacion;
-import com.next.digip.rest.RestClient;
-import com.next.digip.rest.WebResponse;
+
 
 public class WindowSync extends JFrame implements ActionListener, Observer {
 
@@ -34,23 +27,15 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private ReaderArticulos readerArticulos;
-	private ReaderClientes readerClientes;
-
 	private JPanel contentPane;
 	private JComboBox<String> comboBox;
 	private TextArea textAreaResponse;
 	private JButton btnOk;
-	private RestClient restClient;
 
 	/**
 	 * Create the frame.
 	 */
 	public WindowSync() {
-
-		this.restClient = new RestClient();
-		this.readerArticulos = new ReaderArticulos();
-		this.readerClientes = new ReaderClientes();
 
 		ControllerLocal.getInstance().addObserver(this);
 

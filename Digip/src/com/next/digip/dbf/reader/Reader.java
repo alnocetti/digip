@@ -2,24 +2,11 @@ package com.next.digip.dbf.reader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFField;
 import com.linuxense.javadbf.DBFReader;
-import com.linuxense.javadbf.DBFRow;
 import com.linuxense.javadbf.DBFUtils;
-import com.next.digip.enums.EstadoPedido;
-import com.next.digip.enums.TipoRotacion;
-import com.next.digip.model.Articulo;
-import com.next.digip.model.ArticuloUnidadMedida;
-import com.next.digip.model.ArticuloUnidadMedidaCodigo;
-import com.next.digip.model.Cliente;
-import com.next.digip.model.ClienteUbicacion;
-import com.next.digip.model.Pedido;
-import com.next.digip.model.PedidoDetalle;
 
 public class Reader {
 

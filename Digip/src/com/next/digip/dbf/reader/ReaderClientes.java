@@ -1,10 +1,14 @@
 package com.next.digip.dbf.reader;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+
+import org.yasas.xbase4j.XBase;
+import org.yasas.xbase4j.XBaseFile;
 
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
@@ -129,12 +133,14 @@ public class ReaderClientes extends Observable{
 
 		List<Cliente> clientes = new ArrayList<Cliente>();
 
-		reader = null;
-
+		DBFReader reader = null;
+		XBaseFile writer = null;
+		
 		try {
 
 			// create a DBFReader object
 			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/cccuenta.dbf"));
+			writer = new XBase().open(new File("//192.168.90.2/visual/cccuenta.dbf"));
 
 			DBFRow row;
 
@@ -147,6 +153,13 @@ public class ReaderClientes extends Observable{
 				setChanged();
 				notifyObservers("Leyendo clientes: " + Integer.toString(registro) + " de " + Integer.toString(cantRegistros) + "\n");
 			
+				if(!row.getString("CLINOVED").equals("S"))
+					continue;
+				
+				//actualizo novedad
+				writer.go(registro - 1);
+				writer.setValue("CLINOVED", "N");
+				
 				Cliente cliente = new Cliente();
 				
 				List<ClienteUbicacion> ubicaciones = new  ArrayList<ClienteUbicacion>();
@@ -201,6 +214,7 @@ public class ReaderClientes extends Observable{
 			e1.printStackTrace();
 		} finally {
 			DBFUtils.close(reader);
+			writer.closeQuietly();
 		}
 
 		return clientes;
