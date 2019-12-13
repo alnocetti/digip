@@ -1,12 +1,22 @@
 package com.next.digip.model;
 
+import com.google.gson.annotations.Expose;
+
 public class PedidoDetalle {
 	
-	private String codigoPedido;
-	private String codigoArticulo;
-	private int unidades;
-	private int unidadesSatisfecha;
-	private int minimoDiasVencimiento;
+	@Expose
+	private String CodigoPedido;
+	
+	@Expose
+	private String CodigoArticulo;
+	
+	@Expose
+	private int Unidades;
+	
+	private int UnidadesSatisfecha;
+	
+	@Expose
+	private int MinimoDiasVencimiento;
 	
 	public PedidoDetalle() {
 		super();
@@ -14,43 +24,43 @@ public class PedidoDetalle {
 	}
 
 	public String getCodigoPedido() {
-		return codigoPedido;
+		return CodigoPedido;
 	}
 
 	public void setCodigoPedido(String codigoPedido) {
-		this.codigoPedido = codigoPedido;
+		this.CodigoPedido = codigoPedido;
 	}
 
 	public String getCodigoArticulo() {
-		return codigoArticulo;
+		return CodigoArticulo;
 	}
 
 	public void setCodigoArticulo(String codigoArticulo) {
-		this.codigoArticulo = codigoArticulo;
+		this.CodigoArticulo = codigoArticulo;
 	}
 
 	public int getUnidades() {
-		return unidades;
+		return Unidades;
 	}
 
 	public void setUnidades(int unidades) {
-		this.unidades = unidades;
+		this.Unidades = unidades;
 	}
 
 	public int getUnidadesSatisfecha() {
-		return unidadesSatisfecha;
+		return UnidadesSatisfecha;
 	}
 
 	public void setUnidadesSatisfecha(int unidadesSatisfecha) {
-		this.unidadesSatisfecha = unidadesSatisfecha;
+		this.UnidadesSatisfecha = unidadesSatisfecha;
 	}
 
 	public int getMinimoDiasVencimiento() {
-		return minimoDiasVencimiento;
+		return MinimoDiasVencimiento;
 	}
 
 	public void setMinimoDiasVencimiento(int minimoDiasVencimiento) {
-		this.minimoDiasVencimiento = minimoDiasVencimiento;
+		this.MinimoDiasVencimiento = minimoDiasVencimiento;
 	}
 	
 	

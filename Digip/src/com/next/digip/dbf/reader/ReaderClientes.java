@@ -14,6 +14,7 @@ import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
 import com.linuxense.javadbf.DBFRow;
 import com.linuxense.javadbf.DBFUtils;
+import com.next.digip.main.Application;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
 
@@ -34,7 +35,7 @@ public class ReaderClientes extends Observable{
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/cccuenta.dbf"));
+			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "cccuenta.dbf"));
 
 			DBFRow row;
 
@@ -79,7 +80,7 @@ public class ReaderClientes extends Observable{
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/cccuenta.dbf"));
+			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "cccuenta.dbf"));
 
 			DBFRow row;
 
@@ -139,15 +140,15 @@ public class ReaderClientes extends Observable{
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/cccuenta.dbf"));
-			writer = new XBase().open(new File("//192.168.90.2/visual/cccuenta.dbf"));
+			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "cccuenta.dbf"));
+			writer = new XBase().open(new File(Application.DIR_LECTURA + "cccuenta.dbf"));
 
 			DBFRow row;
 
 			int registro = 0;
 			int cantRegistros = reader.getRecordCount();
 			
-			while ((row = reader.nextRow()) != null && registro <= 3) {
+			while ((row = reader.nextRow()) != null) {
 				registro ++;
 				
 				setChanged();
@@ -167,6 +168,11 @@ public class ReaderClientes extends Observable{
 				ClienteUbicacion clienteUbicacion = new  ClienteUbicacion();
 
 				cliente.setCodigo(row.getString("CLICODIGO"));
+				
+				
+				if(row.getString("CLICODIGO").equals("003625")){
+					System.out.println("Cliente 003625");
+				}
 
 				cliente.setDescripcion(row.getString("CLIRAZSOC"));
 

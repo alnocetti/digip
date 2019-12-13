@@ -15,6 +15,7 @@ import com.linuxense.javadbf.DBFReader;
 import com.linuxense.javadbf.DBFRow;
 import com.linuxense.javadbf.DBFUtils;
 import com.next.digip.enums.TipoRotacion;
+import com.next.digip.main.Application;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
@@ -40,7 +41,7 @@ public class ReaderArticulos extends Observable{
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/dtitems.dbf"));
+			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitems.dbf"));
 
 			DBFRow row;
 
@@ -101,8 +102,8 @@ public class ReaderArticulos extends Observable{
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/dtitems.dbf"));
-			writer = new XBase().open(new File("//192.168.90.2/visual/dtitems.dbf"));
+			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitems.dbf"));
+			writer = new XBase().open(new File(Application.DIR_LECTURA + "dtitems.dbf"));
 
 			
 			DBFRow row;
@@ -110,7 +111,7 @@ public class ReaderArticulos extends Observable{
 			int registro = 0;
 			int cantRegistros = reader.getRecordCount();
 
-			while ((row = reader.nextRow()) != null && registro <= 4) {
+			while ((row = reader.nextRow()) != null) {
 				
 				registro++;
 				
@@ -144,7 +145,7 @@ public class ReaderArticulos extends Observable{
 				articulo.setDiasVidaUtil(365);
 				articulo.setUsaLote(false);
 				articulo.setUsaSerie(false);
-				articulo.setUsaVencimiento(false);
+				articulo.setUsaVencimiento(true);
 				articulo.setArticuloTipoRotacion(TipoRotacion.Alta);
 				articulo.setActivo(true);
 
@@ -156,21 +157,22 @@ public class ReaderArticulos extends Observable{
 
 					switch (aum.getUnidadMedida_Id()) {
 					case 1:
-						aumc.setCodigo(row.getString("ITEAN13"));
+						aumc.setCodigo(row.getString("ITEAN13").trim());
 						aum.setUnidades(this.getUnidad(row));
-
+						
 						break;
 					case 2:
-						aumc.setCodigo(row.getString("ITDUN14"));
+						aumc.setCodigo(row.getString("ITDUN14").trim());
 						aum.setUnidades(this.getUnidadPorBulto(row));
 
 						break;
 					case 3:
-						aumc.setCodigo(row.getString("CODIGO"));
+						aumc.setCodigo(row.getString("CODIGO").trim());
 						aum.setUnidades(this.getUnidadPorPallet(row));
 
 						break;
 					}
+
 					aum.addUnidadMedidaCodigo(aumc);
 				}
 
@@ -202,7 +204,7 @@ public class ReaderArticulos extends Observable{
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream("//192.168.90.2/visual/dtitmedida.dbf"));
+			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitmedida.dbf"));
 
 			DBFRow row;
 
@@ -218,6 +220,9 @@ public class ReaderArticulos extends Observable{
 				unidadMedida.setPeso(row.getInt("MEDPESO"));
 				unidadMedida.setProfundo(row.getInt("MEDLARGO"));
 				unidadMedida.setActivo(true);
+				unidadMedida.setEsUnidadConversion(row.getString("MEDUNICONV").equals("S") ? true : false);
+				unidadMedida.setEsUnidadDeVenta(row.getString("MEDUNIVTA").equals("S") ? true : false);
+				unidadMedida.setEsUnidadMenor(row.getString("MEDUNIMEN").equals("S") ? true : false);
 
 				int aux_id = Integer.parseInt(codigoArticulo + Integer.toString(row.getInt("MEDTIPO")));
 				unidadMedida.setUnidadMedida_Id(aux_id);

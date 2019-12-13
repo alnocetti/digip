@@ -7,96 +7,96 @@ import java.util.List;
 import com.next.digip.enums.EstadoPedido;
 
 public class Pedido {
-	private String codigo;
-	private String codigoClienteUbicacion;
-	private EstadoPedido pedidoEstado;
-	private Date fecha;
-	private Date fechaEstimadaEntrega;
-	private String observacion;
-	private float importe;
-	private String codigoDespacho;
-	private List<PedidoDetalle> pedidoDetalle;
+	private String Codigo;
+	private String CodigoClienteUbicacion;
+	private String PedidoEstado;
+	private String Fecha;
+	private String FechaEstimadaEntrega;
+	private String Observacion;
+	private float Importe;
+	private String CodigoDespacho;
+	private List<PedidoDetalle> PedidoDetalle;
 	
 	public Pedido() {
 		super();
-		this.pedidoDetalle = new ArrayList<PedidoDetalle>();
+		this.PedidoDetalle = new ArrayList<PedidoDetalle>();
 		// TODO Auto-generated constructor stub
 	}
 
 	public String getCodigo() {
-		return codigo;
+		return Codigo;
 	}
 
 	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+		this.Codigo = codigo;
 	}
 
 	public String getCodigoClienteUbicacion() {
-		return codigoClienteUbicacion;
+		return CodigoClienteUbicacion;
 	}
 
 	public void setCodigoClienteUbicacion(String codigoClienteUbicacion) {
-		this.codigoClienteUbicacion = codigoClienteUbicacion;
+		this.CodigoClienteUbicacion = codigoClienteUbicacion;
 	}
 
-	public EstadoPedido getPedidoEstado() {
-		return pedidoEstado;
+	public String getPedidoEstado() {
+		return PedidoEstado;
 	}
 
-	public void setPedidoEstado(EstadoPedido pedidoEstado) {
-		this.pedidoEstado = pedidoEstado;
+	public void setPedidoEstado(String pedidoEstado) {
+		this.PedidoEstado = pedidoEstado;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public String getFecha() {
+		return Fecha;
 	}
 
-	public void setFecha(Date fechaPedido) {
-		this.fecha = fechaPedido;
+	public void setFecha(String fechaPedido) {
+		this.Fecha = fechaPedido;
 	}
 
-	public Date getFechaEstimadaEntrega() {
-		return fechaEstimadaEntrega;
+	public String getFechaEstimadaEntrega() {
+		return FechaEstimadaEntrega;
 	}
 
-	public void setFechaEstimadaEntrega(Date fechaPedido) {
-		this.fechaEstimadaEntrega = fechaPedido;
+	public void setFechaEstimadaEntrega(String fechaPedido) {
+		this.FechaEstimadaEntrega = fechaPedido;
 	}
 
 	public String getObservacion() {
-		return observacion;
+		return Observacion;
 	}
 
 	public void setObservacion(String observacion) {
-		this.observacion = observacion;
+		this.Observacion = observacion;
 	}
 
 	public float getImporte() {
-		return importe;
+		return Importe;
 	}
 
 	public void setImporte(float importe) {
-		this.importe = importe;
+		this.Importe = importe;
 	}
 
 	public String getCodigoDespacho() {
-		return codigoDespacho;
+		return CodigoDespacho;
 	}
 
 	public void setCodigoDespacho(String codigoDespacho) {
-		this.codigoDespacho = codigoDespacho;
+		this.CodigoDespacho = codigoDespacho;
 	}
 
 	public List<PedidoDetalle> getPedidoDetalle() {
-		return pedidoDetalle;
+		return PedidoDetalle;
 	}
 
 	public void setPedidoDetalle(List<PedidoDetalle> detallePedido) {
-		this.pedidoDetalle = detallePedido;
+		this.PedidoDetalle = detallePedido;
 	}
 	
 	public void addDetallePedido(PedidoDetalle pedidoDetalle) {
-		this.pedidoDetalle.add(pedidoDetalle);
+		this.PedidoDetalle.add(pedidoDetalle);
 	}
 	
 }

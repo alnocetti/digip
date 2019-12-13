@@ -9,12 +9,14 @@ import java.util.Observer;
 import com.next.digip.dbf.reader.ReaderArticulos;
 import com.next.digip.dbf.reader.ReaderClientes;
 import com.next.digip.dbf.reader.ReaderPedidos;
+import com.next.digip.dbf.writer.WriterPedidos;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.model.Pedido;
+import com.next.digip.model.PedidoDetalle;
 import com.next.digip.rest.RestClient;
 import com.next.digip.rest.WebResponse;
 
@@ -25,26 +27,29 @@ public class ControllerLocal extends Observable implements Observer{
 	public ReaderArticulos readerArticulos;
 	public ReaderClientes readerClientes;
 	public ReaderPedidos readerPedidos;
+	public WriterPedidos writerPedidos;
 	public String estado;
 	
    public static ControllerLocal getInstance() throws RuntimeException {
         
-        if(instance == null) {
-            
-        	instance =  new ControllerLocal();
-        }
-        
-        return instance;
-    }
-
+	   instance = instance == null ? new ControllerLocal() : instance;
+//       if(instance == null) {
+//           
+//       	instance =  new ControllerLocal();
+//       }
+//       
+       return instance;
+   }
 	public ControllerLocal() {
 		super();
 		this.restClient = new RestClient();
 		this.readerArticulos = new ReaderArticulos();
 		this.readerClientes = new ReaderClientes();
 		this.readerPedidos = new ReaderPedidos();
+		this.writerPedidos = new WriterPedidos();
 		readerArticulos.addObserver(this);
 		readerClientes.addObserver(this);
+		writerPedidos.addObserver(this);
 
 		// TODO Auto-generated constructor stub
 	}
@@ -319,6 +324,111 @@ public class ControllerLocal extends Observable implements Observer{
 	}
 	
 	
+	public List<WebResponse> sincronizarPedidos() throws IOException {
+		
+		System.out.println("<-- Sincronizando pedidos");
+		
+		this.estado = "***Sincronizando pedidos***\n";
+		setChanged();
+		notifyObservers(estado);
+
+		this.estado = "Descargando pedidos\n";
+		setChanged();
+		notifyObservers(estado);
+		
+		List<Pedido> pedidosPatagonia = this.restClient.getPedidos();
+		
+		this.estado = "Leyendo pedidos\n";
+		setChanged();
+		notifyObservers(estado);
+		
+		List<Pedido> pedidos = this.readerPedidos.readPedidos();
+		
+		List<WebResponse> respuestas = new ArrayList<WebResponse>();
+		
+		boolean existe = false;
+				
+		for (Pedido pedido : pedidos) {
+			
+			existe = false;
+			
+			this.estado = "Enviando pedido: " + pedido.getCodigo() + "\n";
+			setChanged();
+			notifyObservers(estado);
+			
+			for(Pedido pedidoPatagonia : pedidosPatagonia) {
+				
+				if (pedido.getCodigo().equals(pedidoPatagonia.getCodigo())) {
+					
+					existe = true;
+					break;
+
+				}
+					
+			}
+			
+			if (existe) {
+				
+				WebResponse webResponse = this.restClient.putPedido(pedido);
+				respuestas.add(webResponse);
+				
+			}else {
+				
+				WebResponse webResponse = this.restClient.postPedido(pedido);
+				respuestas.add(webResponse);
+			}
+			
+			// envia detalle de pedido
+			
+			List<PedidoDetalle> detalles = pedido.getPedidoDetalle();
+			
+			List<PedidoDetalle> detallesPatagonia = this.restClient.getDetallePedido(pedido.getCodigo());
+						
+			for (PedidoDetalle pd : detalles) {
+				
+				existe = false;
+				
+				this.estado = "    Enviando detalle del pedido - Articulo: " + pd.getCodigoArticulo() + "\n";
+				setChanged();
+				notifyObservers(estado);
+				
+				for(PedidoDetalle dpPatagonia : detallesPatagonia) {
+
+					if (pd.getCodigoArticulo().equals(dpPatagonia.getCodigoArticulo())) {
+						
+						existe = true;
+						break;
+						
+					}
+				}
+				
+				if (existe) {
+
+					WebResponse webResponse = this.restClient.putPedidoDetalle(pd);
+
+					respuestas.add(webResponse);
+					
+				}else {
+					
+					WebResponse webResponse = this.restClient.postPedidoDetalle(pd);
+
+					respuestas.add(webResponse);
+				}
+				
+
+				
+			}
+		}
+			
+			this.estado = "_______________________________________________________________________\n\n";
+			setChanged();
+			notifyObservers(estado);
+		
+		return respuestas;
+	}
+	
+	
+	
 	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException {
 		System.out.println("<-- testWebService()");
 		return this.restClient.testWebService(uri, method);
@@ -329,19 +439,41 @@ public class ControllerLocal extends Observable implements Observer{
 		return restClient.getPedidos();
 	}
 	
-	public void postPedidos() throws IOException {
-		System.out.println("<-- postPedidos()");
-		 
-		List<Pedido> pedidos = this.readerPedidos.readPedidos();
+	public void bajarPedidos() throws IOException {
+		
+		this.estado = "***Descargando pedidos para facturar***\n";
+		setChanged();
+		notifyObservers(estado);
+		
+		this.estado = "Descargando pedidos \n";
+		setChanged();
+		notifyObservers(estado);
+		
+		List<Pedido> pedidos = this.restClient.getPedidos();
 		
 		for(Pedido pedido : pedidos) {
-
-			this.restClient.postPedidos(pedido);
 			
+			if( pedido.getPedidoEstado().trim().equals("4") && pedido.getCodigo() != null) {
+				this.estado = "Guardando pedido: " + pedido.getCodigo() + "\n";
+				setChanged();
+				notifyObservers(estado);
+				
+				this.writerPedidos.writePedido(pedido);
+				
+				for(PedidoDetalle pedidoDetalle : this.restClient.getDetallePedido(pedido.getCodigo())) {
+					
+					this.writerPedidos.writeDetalle(pedidoDetalle);
+				}
+				
+				this.restClient.remitirPedido(Integer.valueOf(pedido.getCodigo()));
+				
+			}
 		}
 		
 		return;
+		
 	}
+	
 
 	@Override
 	public void update(Observable o, Object arg) {

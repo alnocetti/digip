@@ -13,12 +13,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.next.digip.dbf.reader.Reader;
+import com.next.digip.main.Application;
 import com.next.digip.model.Articulo;
 import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
 import com.next.digip.model.Pedido;
+import com.next.digip.model.PedidoDetalle;
 
 public class RestClient {
 	
@@ -30,7 +32,6 @@ public class RestClient {
 	public RestClient() {
 		super();
 		this.reader = new Reader();
-		// TODO Auto-generated constructor stub
 	}
 		
 	public WebResponse testWebService(String uri, String method) throws IOException, RuntimeException{
@@ -43,8 +44,8 @@ public class RestClient {
 			conn.setRequestMethod(method);
 			
 			// seteo api-key 
-			//conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			//conn.addRequestProperty("X-API-Key", Application.API_KEY);
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 						
 			conn.setRequestProperty("Accept", "application/json");
@@ -113,7 +114,7 @@ public class RestClient {
 			
 			conn.setRequestProperty("Accept", "application/json");
 			
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -180,7 +181,7 @@ public class RestClient {
 			
 			conn.setRequestProperty("Accept", "application/json");
 			
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -249,7 +250,7 @@ public class RestClient {
 			
 			conn.setRequestProperty("Accept", "application/json");
 			
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -316,7 +317,7 @@ public class RestClient {
 			
 			conn.setRequestProperty("Accept", "application/json");
 			
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -381,7 +382,7 @@ public class RestClient {
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
 			
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			if (conn.getResponseCode() != 200) {
 				
@@ -443,13 +444,13 @@ public class RestClient {
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
 			
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			if (conn.getResponseCode() != 200) {
 				
-				if (conn.getResponseCode() < conn.HTTP_SERVER_ERROR) {
-					
-					return null;
+				//no existe ubicacion para el cliente
+				if (conn.getResponseCode() == 400) {
+					return clienteUbicacion;
 					
 				}else {
 				
@@ -487,6 +488,214 @@ public class RestClient {
 		
 	}
 	
+	
+	public List<Pedido> getPedidos() {
+		
+		List<Pedido> pedidos = new ArrayList<Pedido>();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+				
+			System.out.println("<-- getPedidos()" );
+
+		try {
+			
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/Pedidos");//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+			
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+			
+			if (conn.getResponseCode() != 200) {
+				
+				//no existe ubicacion para el cliente
+				if (conn.getResponseCode() == 400) {
+					return pedidos;
+					
+				}else {
+				
+					throw new RuntimeException("Failed : HTTP Error code : " + conn.getResponseCode() + "-" + conn.getResponseMessage());
+			
+				}
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			TypeToken<ArrayList<Pedido>> token = new TypeToken<ArrayList<Pedido>>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				pedidos =  gson.fromJson(output,  token.getType());
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return pedidos;
+		}
+		return pedidos;
+		
+	}
+	
+	public Pedido getPedidoPorCodigo(String codigo) {
+		
+		Pedido pedido = new Pedido();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+				
+			System.out.println("<-- getPedido(" + codigo + ")" );
+
+		try {
+			
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + codigo);//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+			
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+			
+			if (conn.getResponseCode() != 200) {
+				
+				//no existe ubicacion para el cliente
+				if (conn.getResponseCode() == 400) {
+					return pedido;
+					
+				}else {
+				
+					throw new RuntimeException("Failed : HTTP Error code : " + conn.getResponseCode() + "-" + conn.getResponseMessage());
+			
+				}
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			TypeToken<Pedido> token = new TypeToken<Pedido>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				pedido =  gson.fromJson(output,  token.getType());
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return pedido;
+		}
+		return pedido;
+		
+	}
+	
+	public List<PedidoDetalle> getDetallePedido(String codigo) {
+		
+		List<PedidoDetalle> detalle = new ArrayList<PedidoDetalle>();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+				
+			System.out.println("<-- getPedidoDetalle(" + codigo + ")" );
+
+		try {
+			
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + codigo + "/Detalle");//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+			
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+			
+			if (conn.getResponseCode() != 200) {
+				
+				//no existe ubicacion para el cliente
+				if (conn.getResponseCode() == 400) {
+					return detalle;
+					
+				}else {
+				
+					throw new RuntimeException("Failed : HTTP Error code : " + conn.getResponseCode() + "-" + conn.getResponseMessage());
+			
+				}
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			TypeToken<List<PedidoDetalle>> token = new TypeToken<List<PedidoDetalle>>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				detalle =  gson.fromJson(output,  token.getType());
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return detalle;
+		}
+		return detalle;
+		
+	}
+	
 	public WebResponse postArticulo(Articulo articulo) throws IOException {
 				
 		WebResponse webResponse = new WebResponse();
@@ -509,7 +718,7 @@ public class RestClient {
 			conn.setRequestMethod("POST");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -527,7 +736,7 @@ public class RestClient {
 			InputStreamReader _is;
 			BufferedReader br;
 			
-			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			if (conn.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
 			    _is = new InputStreamReader(conn.getInputStream());
 			} else {
 			     /* error from server */
@@ -596,7 +805,7 @@ public class RestClient {
 			conn.setRequestMethod("PUT");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -686,7 +895,7 @@ public class RestClient {
 			conn.setRequestMethod("POST");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -782,7 +991,7 @@ public class RestClient {
 			conn.setRequestMethod("PUT");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 	
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -875,7 +1084,7 @@ public class RestClient {
 			conn.setRequestMethod("POST");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 	
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -965,7 +1174,7 @@ public class RestClient {
 			conn.setRequestMethod("PUT");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 			
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -1054,7 +1263,7 @@ public class RestClient {
 			conn.setRequestMethod("POST");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 	
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -1142,7 +1351,7 @@ public class RestClient {
 			conn.setRequestMethod("PUT");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 	
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -1231,7 +1440,7 @@ public class RestClient {
 			conn.setRequestMethod("POST");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 	
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -1320,7 +1529,7 @@ public class RestClient {
 			conn.setRequestMethod("PUT");
 			
 			// seteo api-key 
-			conn.addRequestProperty("X-API-Key", "nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7");
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
 	
 			conn.setReadTimeout(30000);
 			conn.setConnectTimeout(30000);
@@ -1386,15 +1595,448 @@ public class RestClient {
 		return webResponse;
 	}
 	
-	// revisar metodos pedidos
-	public List<Pedido> getPedidos(){
+	public WebResponse postPedido(Pedido pedido) throws IOException {
 		
-		List<Pedido> pedidos = new ArrayList<Pedido>();
+		WebResponse webResponse = new WebResponse();
 		
-		return pedidos;
-	}
+		intentos = 0;
+		
+		while(intentos <= 1) {
+		
+			System.out.println("<-- postPedido(" + pedido.getCodigo() + ")");
 
-	public void postPedidos(Pedido pedido) throws IOException {
+		try {
+		
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					
+			
+			url = new URL("http://api.patagoniawms.com/v1/Pedidos");//your url i.e fetch data from .
+			
+			conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("POST");
+			
+			// seteo api-key 
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+	
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+	
+			conn.setRequestProperty("Content-Type", "application/json");
+			
+			conn.setDoOutput(true);
+			
+			String auxi = gson.toJson(pedido);
+			
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+			bw.write(auxi);
+			bw.flush();
+			bw.close();
+			
+			InputStreamReader _is;
+			BufferedReader br;
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			    _is = new InputStreamReader(conn.getInputStream());
+			} else {
+			     /* error from server */
+			    _is = new InputStreamReader(conn.getErrorStream());
+			}
+			
+			br = new BufferedReader(_is);
+			
+			StringBuilder builder = new StringBuilder();
+			
+			String output;
+			
+			while ((output = br.readLine()) != null) {
+	
+				builder.append(output);
+			
+			}
+			
+			String aux = builder.toString();
+			
+			webResponse.setResponseCode(conn.getResponseCode());
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+				
+				webResponse.setResponseMessage(conn.getResponseMessage() + ", Pedido enviado correctamente: " + pedido.getCodigo());
+				
+			} else {
+			     /* error from server */
+				webResponse.setResponseMessage(aux);
+				
+			}
+			
+			conn.disconnect();
+			
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return webResponse;
+		}
+		return webResponse;
+
+	}
+		
+	public WebResponse putPedido(Pedido pedido) throws IOException {
+		
+		WebResponse webResponse = new WebResponse();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+		
+			System.out.println("<-- putPedido(" + pedido.getCodigo() + ")");
+
+		try {
+		
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					
+			
+			url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + pedido.getCodigo());//your url i.e fetch data from .
+			
+			conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("PUT");
+			
+			// seteo api-key 
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+	
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+	
+			conn.setRequestProperty("Content-Type", "application/json");
+			
+			conn.setDoOutput(true);
+					
+			String auxi = gson.toJson(pedido);
+			
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+			bw.write(auxi);
+			bw.flush();
+			bw.close();
+			
+			InputStreamReader _is;
+			BufferedReader br;
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			    _is = new InputStreamReader(conn.getInputStream());
+			} else {
+			     /* error from server */
+			    _is = new InputStreamReader(conn.getErrorStream());
+			}
+			
+			br = new BufferedReader(_is);
+			
+			StringBuilder builder = new StringBuilder();
+			
+			String output;
+			
+			while ((output = br.readLine()) != null) {
+	
+				builder.append(output);
+			
+			}
+			
+			String aux = builder.toString();
+			
+			webResponse.setResponseCode(conn.getResponseCode());
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+				
+				webResponse.setResponseMessage(conn.getResponseMessage() + ", Pedido enviado correctamente: " + pedido.getCodigo());
+				
+			} else {
+			     /* error from server */
+				webResponse.setResponseMessage(aux);
+				
+			}
+			
+			conn.disconnect();
+			
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return webResponse;
+		}
+		return webResponse;
+
+	}
+	
+	public WebResponse postPedidoDetalle(PedidoDetalle detalle) throws IOException {
+		
+		WebResponse webResponse = new WebResponse();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+		
+			System.out.println("<-- postPedidoDetalle(" + detalle.getCodigoArticulo() + ")");
+
+		try {
+		
+			Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+					
+			
+			url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + detalle.getCodigoPedido() + "/Detalle");//your url i.e fetch data from .
+			
+			conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("POST");
+			
+			// seteo api-key 
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+	
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+	
+			conn.setRequestProperty("Content-Type", "application/json");
+			
+			conn.setDoOutput(true);
+			
+			String auxi = gson.toJson(detalle);
+			
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+			bw.write(auxi);
+			bw.flush();
+			bw.close();
+			
+			InputStreamReader _is;
+			BufferedReader br;
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			    _is = new InputStreamReader(conn.getInputStream());
+			} else {
+			     /* error from server */
+			    _is = new InputStreamReader(conn.getErrorStream());
+			}
+			
+			br = new BufferedReader(_is);
+			
+			StringBuilder builder = new StringBuilder();
+			
+			String output;
+			
+			while ((output = br.readLine()) != null) {
+	
+				builder.append(output);
+			
+			}
+			
+			String aux = builder.toString();
+			
+			webResponse.setResponseCode(conn.getResponseCode());
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+				
+				webResponse.setResponseMessage(conn.getResponseMessage() + ", Detalle Pedido enviado correctamente: " + detalle.getCodigoArticulo());
+				
+			} else {
+			     /* error from server */
+				webResponse.setResponseMessage(aux);
+				
+			}
+			
+			conn.disconnect();
+			
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return webResponse;
+		}
+		return webResponse;
+
+	}
+		
+	public WebResponse putPedidoDetalle(PedidoDetalle detalle) throws IOException {
+		
+		WebResponse webResponse = new WebResponse();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+		
+			System.out.println("<-- putPedidoDetalle(" + detalle.getCodigoArticulo() + ")");
+
+		try {
+		
+			Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+					
+			
+			url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + detalle.getCodigoPedido() + "/Detalle/" + detalle.getCodigoArticulo());//your url i.e fetch data from .
+			
+			conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("PUT");
+			
+			// seteo api-key 
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+	
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+	
+			conn.setRequestProperty("Content-Type", "application/json");
+			
+			conn.setDoOutput(true);
+					
+			String auxi = gson.toJson(detalle);
+			
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+			bw.write(auxi);
+			bw.flush();
+			bw.close();
+			
+			InputStreamReader _is;
+			BufferedReader br;
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			    _is = new InputStreamReader(conn.getInputStream());
+			} else {
+			     /* error from server */
+			    _is = new InputStreamReader(conn.getErrorStream());
+			}
+			
+			br = new BufferedReader(_is);
+			
+			StringBuilder builder = new StringBuilder();
+			
+			String output;
+			
+			while ((output = br.readLine()) != null) {
+	
+				builder.append(output);
+			
+			}
+			
+			String aux = builder.toString();
+			
+			webResponse.setResponseCode(conn.getResponseCode());
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+				
+				webResponse.setResponseMessage(conn.getResponseMessage() + ", Detalle Pedido enviado correctamente: " + detalle.getCodigoArticulo());
+				
+			} else {
+			     /* error from server */
+				webResponse.setResponseMessage(aux);
+				
+			}
+			
+			conn.disconnect();
+			
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return webResponse;
+		}
+		return webResponse;
+
+	}
+	
+	public WebResponse remitirPedido(int codigoPedido) throws IOException {
+		
+		WebResponse webResponse = new WebResponse();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+		
+			System.out.println("<-- remitirPedido(" + codigoPedido + ")");
+
+		try {
+		
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					
+			
+			url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + codigoPedido + "/Remitido");//your url i.e fetch data from .
+			
+			conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("PUT");
+			
+			// seteo api-key 
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+	
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+	
+			conn.setRequestProperty("Content-Type", "application/json");
+			
+			conn.setDoOutput(true);
+					
+			String auxi = gson.toJson(null);
+			
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+			bw.write(auxi);
+			bw.flush();
+			bw.close();
+			
+			InputStreamReader _is;
+			BufferedReader br;
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+			    _is = new InputStreamReader(conn.getInputStream());
+			} else {
+			     /* error from server */
+			    _is = new InputStreamReader(conn.getErrorStream());
+			}
+			
+			br = new BufferedReader(_is);
+			
+			StringBuilder builder = new StringBuilder();
+			
+			String output;
+			
+			while ((output = br.readLine()) != null) {
+	
+				builder.append(output);
+			
+			}
+			
+			String aux = builder.toString();
+			
+			webResponse.setResponseCode(conn.getResponseCode());
+			
+			if (conn.getResponseCode() < conn.HTTP_BAD_REQUEST) {
+				
+				webResponse.setResponseMessage(conn.getResponseMessage() + ", Pedido remitido correctamente: " + codigoPedido);
+				
+			} else {
+			     /* error from server */
+				webResponse.setResponseMessage(aux);
+				
+			}
+			
+			conn.disconnect();
+			
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return webResponse;
+		}
+		return webResponse;
 
 	}
 

@@ -59,15 +59,19 @@ public class Main extends JFrame implements ActionListener{
 		mnFile.add(mntmExit);
 		mntmExit.addActionListener(this);
 		
-		JMenu mnEdit = new JMenu("Edit");
-		menuBar.add(mnEdit);
+		JMenu mnSync = new JMenu("Sync");
+		menuBar.add(mnSync);
+		
+		JMenuItem mntmSyncFiles = new JMenuItem("Sync files");
+		mnSync.add(mntmSyncFiles);
+		mntmSyncFiles.addActionListener(this);
 		
 		JMenuItem mntmConfiguration = new JMenuItem("Configuration");
-		mnEdit.add(mntmConfiguration);
+		mnSync.add(mntmConfiguration);
 		mntmConfiguration.addActionListener(this);
 		
 		JMenuItem mntmPreferences = new JMenuItem("Preferences");
-		mnEdit.add(mntmPreferences);
+		mnSync.add(mntmPreferences);
 		mntmPreferences.addActionListener(this);
 		
 		JMenu mnHelp = new JMenu("Help");
@@ -82,9 +86,6 @@ public class Main extends JFrame implements ActionListener{
 		mnHelp.add(mntmTestWebServices);
 		mntmTestWebServices.addActionListener(this);
 		
-		JMenuItem mntmSyncFiles = new JMenuItem("Sync files");
-		mnHelp.add(mntmSyncFiles);
-		mntmSyncFiles.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

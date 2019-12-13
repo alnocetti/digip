@@ -60,9 +60,11 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 		comboBox.setBounds(61, 52, 120, 18);
 		comboBox.addItem("Articulos");
 		comboBox.addItem("Clientes");
-		comboBox.addItem("Pedidos");
+		comboBox.addItem("Pedidos a preparar");
 		comboBox.addItem("Stock");
+		comboBox.addItem("Pedidos a facturar");
 		contentPane.add(comboBox);
+		
 		comboBox.setSelectedIndex(0);
 		comboBox.addActionListener(this);
 
@@ -78,13 +80,9 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(this.comboBox)) {
-			// change when select something in combobox
-			System.out.println(this.comboBox.getSelectedIndex());
-
-		}
 
 		if (e.getSource().equals(this.btnOk)) {
+			contentPane.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
 			switch (this.comboBox.getSelectedIndex()) {
 
@@ -95,32 +93,37 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 					ControllerLocal.getInstance().sincronizarArticulos();
 
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					JOptionPane.showMessageDialog(null, "Se produjo un error al enviar datos", "Envio datos",
+							JOptionPane.ERROR_MESSAGE);
 				}
-				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos",
-						JOptionPane.INFORMATION_MESSAGE);
 				break;
 
 			case 1:
-
+				
 				try {
 					ControllerLocal.getInstance().sincronizarClientes();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (RuntimeException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (IOException | RuntimeException e1) {
+
+					contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					JOptionPane.showMessageDialog(null, "Se produjo un error al enviar datos", "Envio datos",
+							JOptionPane.ERROR_MESSAGE);
 				}
-				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos",
-						JOptionPane.INFORMATION_MESSAGE);
+
 				break;
 
 
 			case 2:
+				
+				try {
+					ControllerLocal.getInstance().sincronizarPedidos();
+				} catch (IOException | RuntimeException e1) {
+
+					contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					JOptionPane.showMessageDialog(null, "Se produjo un error al enviar datos", "Envio datos",
+							JOptionPane.ERROR_MESSAGE);
+					
+				}
 
 				break;
 
@@ -128,14 +131,28 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 				
 				break;
 				
+			case 4:
+				
+				try {
+					ControllerLocal.getInstance().bajarPedidos();
+				} catch (IOException | RuntimeException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				break;
+				
 			}
+			contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			JOptionPane.showMessageDialog(null, "Proceso finalizado", "Envio datos",
+					JOptionPane.INFORMATION_MESSAGE);
 
 		}
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-
+		System.out.println(arg1);
 		this.textAreaResponse.append((String) arg1);
 		// TODO Auto-generated method stub
 

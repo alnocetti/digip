@@ -80,6 +80,7 @@ public class WindowTestWebServices extends JFrame implements ActionListener {
 		btnOk.setBounds(10, 343, 89, 23);
 		contentPane.add(btnOk);
 		btnOk.addActionListener(this);
+		btnOk.setEnabled(false);
 		
 		JLabel lblMetodo = new JLabel("Metodo:");
 		lblMetodo.setBounds(242, 58, 46, 14);
