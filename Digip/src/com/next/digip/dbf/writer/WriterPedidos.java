@@ -26,7 +26,7 @@ public class WriterPedidos extends Observable{
 		
 //		inicializarCabeza(writer);
 		
-		Object rowData[] = new Object[8];
+		Object rowData[] = new Object[9];
 		
 		rowData[0] = Integer.valueOf(pedido.getCodigo());
 		rowData[1] = pedido.getCodigoClienteUbicacion();

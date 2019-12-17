@@ -59,7 +59,7 @@ public class WindowAbout extends JFrame {
 		lblCopyrightNext.setBounds(123, 157, 194, 14);
 		contentPane.add(lblCopyrightNext);
 		
-		JLabel lblV = new JLabel("v1.10 - 13 Dic 2019");
+		JLabel lblV = new JLabel("v1.20 - 17 Dic 2019");
 		lblV.setHorizontalAlignment(SwingConstants.CENTER);
 		lblV.setBounds(133, 182, 175, 14);
 		contentPane.add(lblV);

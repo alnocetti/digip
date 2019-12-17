@@ -33,6 +33,10 @@ public class ApplicationSync {
 		ControllerLocal.getInstance().sincronizarClientes();
 		
 		ControllerLocal.getInstance().sincronizarArticulos();
+		
+		ControllerLocal.getInstance().sincronizarPedidos();
+		
+		ControllerLocal.getInstance().bajarPedidos();
 
 	}
 

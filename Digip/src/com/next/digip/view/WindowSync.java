@@ -129,7 +129,12 @@ public class WindowSync extends JFrame implements ActionListener, Observer {
 
 			case 3:
 				
-				break;
+				JOptionPane.showMessageDialog(null, "Metodo no implementado", "Error",
+						JOptionPane.WARNING_MESSAGE);
+				contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+				return;
+				//break;
 				
 			case 4:
 				

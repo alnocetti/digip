@@ -130,7 +130,7 @@ public class ReaderArticulos extends Observable{
 				if (row.getString("CODIGO").substring(0, 1).equals("C"))
 					continue;
 
-				if (row.getInt("GRUPO") == 90)
+				if (row.getInt("GRUPO") == 90 || row.getInt("GRUPO") == 98)
 					continue;
 				
 				if (!row.getString("ITNOVEDAD").equals("S"))
