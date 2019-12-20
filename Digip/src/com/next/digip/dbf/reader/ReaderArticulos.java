@@ -247,9 +247,11 @@ public class ReaderArticulos extends Observable{
 
 		try {
 
-			int unidad = row.getInt("UNIDAD");
+			//int unidad = row.getInt("UNIDAD");
 
-			return unidad == 0 ? 1 : unidad;
+			//return unidad == 0 ? 1 : unidad;
+			
+			return 1;
 
 		} catch (DBFException e) {
 

@@ -19,6 +19,8 @@ import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
+import com.next.digip.model.Contenedor;
+import com.next.digip.model.Despacho;
 import com.next.digip.model.Pedido;
 import com.next.digip.model.PedidoDetalle;
 
@@ -695,6 +697,148 @@ public class RestClient {
 		return detalle;
 		
 	}
+	
+	
+	public Despacho getDespacho(int codigoPedido) {
+		
+	Despacho despacho = new Despacho();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+				
+			System.out.println("<-- getDespacho(" + codigoPedido + ")" );
+
+		try {
+			
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + codigoPedido + "/Despacho");//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+			
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+			
+			if (conn.getResponseCode() != 200) {
+				
+				//no existe ubicacion para el cliente
+				if (conn.getResponseCode() == 400) {
+					return despacho;
+					
+				}else {
+				
+					throw new RuntimeException("Failed : HTTP Error code : " + conn.getResponseCode() + "-" + conn.getResponseMessage());
+			
+				}
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			TypeToken<Despacho> token = new TypeToken<Despacho>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				despacho =  gson.fromJson(output,  token.getType());
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return despacho;
+		}
+		return despacho;
+		
+	}
+	
+
+	public List<Contenedor> getContenedores(int codigoPedido) {
+		
+	List<Contenedor> contenedores = new ArrayList<Contenedor>();
+		
+		intentos = 0;
+		
+		while(intentos <= 1) {
+				
+			System.out.println("<-- getContenedores(" + codigoPedido + ")" );
+
+		try {
+			
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+			URL url = new URL("http://api.patagoniawms.com/v1/Pedidos/" + codigoPedido + "/Contenedores");//your url i.e fetch data from .
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			conn.setRequestProperty("Accept", "application/json");
+			
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+			
+			conn.addRequestProperty("X-API-Key", Application.API_KEY);
+			
+			if (conn.getResponseCode() != 200) {
+				
+				//no existe ubicacion para el cliente
+				if (conn.getResponseCode() == 400) {
+					return contenedores;
+					
+				}else {
+				
+					throw new RuntimeException("Failed : HTTP Error code : " + conn.getResponseCode() + "-" + conn.getResponseMessage());
+			
+				}
+			}
+			
+			InputStreamReader in = new InputStreamReader(conn.getInputStream());
+			
+			BufferedReader br = new BufferedReader(in);
+			
+			String output;
+			
+			TypeToken<List<Contenedor>> token = new TypeToken<List<Contenedor>>() {};
+			
+			while ((output = br.readLine()) != null) {
+								
+				contenedores =  gson.fromJson(output,  token.getType());
+				
+			}
+			
+			conn.disconnect();
+
+		} catch (Exception e) {
+			
+			System.out.println("Exception in NetClientGet:- " + e);
+			intentos++;
+			continue;
+		}
+		
+		return contenedores;
+		}
+		return contenedores;
+		
+	}
+	
+	
 	
 	public WebResponse postArticulo(Articulo articulo) throws IOException {
 				
@@ -2039,5 +2183,7 @@ public class RestClient {
 		return webResponse;
 
 	}
+	
+	
 
 }

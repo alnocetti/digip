@@ -15,6 +15,7 @@ import com.next.digip.model.ArticuloUnidadMedida;
 import com.next.digip.model.ArticuloUnidadMedidaCodigo;
 import com.next.digip.model.Cliente;
 import com.next.digip.model.ClienteUbicacion;
+import com.next.digip.model.Despacho;
 import com.next.digip.model.Pedido;
 import com.next.digip.model.PedidoDetalle;
 import com.next.digip.rest.RestClient;
@@ -464,6 +465,10 @@ public class ControllerLocal extends Observable implements Observer{
 					
 					this.writerPedidos.writeDetalle(pedidoDetalle);
 				}
+				
+				Despacho despacho = this.restClient.getDespacho(Integer.valueOf(pedido.getCodigo()));
+				
+				this.writerPedidos.writeDespacho(despacho, Integer.valueOf(pedido.getCodigo()));
 				
 				this.restClient.remitirPedido(Integer.valueOf(pedido.getCodigo()));
 				

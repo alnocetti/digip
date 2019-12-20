@@ -21,8 +21,6 @@ import com.next.digip.model.PedidoDetalle;
 
 public class ReaderPedidos {
 
-	private DBFReader reader;
-
 	public ReaderPedidos() {
 		super();
 	}
@@ -104,11 +102,11 @@ public class ReaderPedidos {
 		try {
 
 			// create a DBFReader object
-			DBFReader reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtenvcpo.dbf"));
+			DBFReader readerDetalle = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtenvcpo.dbf"));
 
 			DBFRow row;
 			
-			while ((row = reader.nextRow()) != null) {
+			while ((row = readerDetalle.nextRow()) != null) {
 								
 				PedidoDetalle detalle = new PedidoDetalle();
 				
@@ -128,18 +126,15 @@ public class ReaderPedidos {
 				detalles.add(detalle);
 
 			}
+			
+			DBFUtils.close(readerDetalle);
 
 		} catch (DBFException e) {
 			e.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		} finally {
-			DBFUtils.close(reader);
-		}
-		
+		} 		
 		return detalles;
-		
-		
 	}
 
 }

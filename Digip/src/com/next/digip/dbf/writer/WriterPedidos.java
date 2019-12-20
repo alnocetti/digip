@@ -7,6 +7,7 @@ import java.util.Observable;
 
 import com.linuxense.javadbf.DBFWriter;
 import com.next.digip.main.Application;
+import com.next.digip.model.Despacho;
 import com.next.digip.model.Pedido;
 import com.next.digip.model.PedidoDetalle;
 
@@ -64,6 +65,27 @@ public class WriterPedidos extends Observable{
 		rowData[2] = pedidoDetalle.getUnidades();
 		rowData[3] = pedidoDetalle.getUnidadesSatisfecha();
 		rowData[4] = pedidoDetalle.getMinimoDiasVencimiento();
+		
+		writer.addRecord(rowData);
+		
+		writer.close();
+		
+		return;
+		
+	}
+	
+	public void writeDespacho(Despacho despacho, int codigoPedido) {
+		DBFWriter writer = null;
+		
+		writer = new DBFWriter(new File(Application.DIR_LECTURA + "dtrecbox.dbf"));
+		
+		Object rowData[] = new Object[5];
+		
+		rowData[0] =  codigoPedido;
+		rowData[1] = despacho.getCodigo();
+		rowData[2] = despacho.getDescripcion();
+		rowData[3] = despacho.getDespachoEstado();
+		rowData[4] = despacho.getUbicacion();
 		
 		writer.addRecord(rowData);
 		
