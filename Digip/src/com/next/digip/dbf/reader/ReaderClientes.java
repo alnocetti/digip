@@ -168,11 +168,6 @@ public class ReaderClientes extends Observable{
 				ClienteUbicacion clienteUbicacion = new  ClienteUbicacion();
 
 				cliente.setCodigo(row.getString("CLICODIGO"));
-				
-				
-				if(row.getString("CLICODIGO").equals("003625")){
-					System.out.println("Cliente 003625");
-				}
 
 				cliente.setDescripcion(row.getString("CLIRAZSOC"));
 

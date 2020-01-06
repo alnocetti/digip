@@ -2,6 +2,7 @@ package com.next.digip.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,6 +13,8 @@ import org.xml.sax.SAXException;
 
 import com.next.digip.controller.ControllerLocal;
 import com.next.digip.dbf.reader.FileUpdater;
+import com.next.digip.dbf.reader.ReaderPedidos;
+import com.next.digip.model.Pedido;
 import com.next.digip.view.Main;
 
 public class Application {
@@ -36,7 +39,7 @@ public class Application {
 		FileUpdater.getInstance().updateFiles();		
 
 		Main mainWindow = new Main();
-		mainWindow.start();
+		mainWindow.start();		
 		
 	}
 }

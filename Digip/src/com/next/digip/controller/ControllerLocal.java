@@ -362,6 +362,11 @@ public class ControllerLocal extends Observable implements Observer{
 				if (pedido.getCodigo().equals(pedidoPatagonia.getCodigo())) {
 					
 					existe = true;
+					
+					this.estado = "Pedido: " + pedido.getCodigo() + " EXISTE PEDIDO, NO SE ENVIA.\n";
+					setChanged();
+					notifyObservers(estado);
+					
 					break;
 
 				}
@@ -370,8 +375,9 @@ public class ControllerLocal extends Observable implements Observer{
 			
 			if (existe) {
 				
-				WebResponse webResponse = this.restClient.putPedido(pedido);
-				respuestas.add(webResponse);
+				continue;
+				//WebResponse webResponse = this.restClient.putPedido(pedido);
+				//respuestas.add(webResponse);
 				
 			}else {
 				
@@ -416,8 +422,6 @@ public class ControllerLocal extends Observable implements Observer{
 					respuestas.add(webResponse);
 				}
 				
-
-				
 			}
 		}
 			
@@ -426,6 +430,8 @@ public class ControllerLocal extends Observable implements Observer{
 			notifyObservers(estado);
 		
 		return respuestas;
+		
+		
 	}
 	
 	

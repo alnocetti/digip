@@ -27,12 +27,9 @@ public class ReaderPedidos {
 
 	public List<Pedido> readPedidos() throws IOException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		DBFReader reader = null;
 		
-		XBaseFile writer = new XBase().open(new File(Application.DIR_LECTURA + "dtenvcab.dbf"));
-
 		List<Pedido> pedidos = new ArrayList<Pedido>();
 
 		try {
@@ -75,21 +72,17 @@ public class ReaderPedidos {
 				
 				pedidos.add(pedido);
 				
-				writer.go(registro - 1);
-				
-				writer.setValue("CABESTADO", "Enviado");
-				writer.setValue("CABOBSERV", "Fecha envio: " + format1.format(new Date()));
+				cambiarEstadoPedido(registro - 1);
 
-			}
+			}		
+			
+			DBFUtils.close(reader);
 
 		} catch (DBFException e) {
 			e.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		} finally {
-			DBFUtils.close(reader);
-			writer.closeQuietly();
-		}
+		} 
 
 		return pedidos;
 
@@ -135,6 +128,29 @@ public class ReaderPedidos {
 			e1.printStackTrace();
 		} 		
 		return detalles;
+	}
+	
+	public void cambiarEstadoPedido(int registro) {
+		
+		try {
+			
+			SimpleDateFormat formatEstadoPedido = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+			XBaseFile writer = new XBase().open(new File(Application.DIR_LECTURA + "dtenvcab.dbf"));
+			
+			writer.go(registro);	
+							
+			writer.setValue("CABESTADO", "Enviado");
+					
+			writer.setValue("CABOBSERV", "Fecha envio: " + formatEstadoPedido.format(new Date()));
+						
+			writer.closeQuietly();			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

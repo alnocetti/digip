@@ -98,20 +98,20 @@ public class ReaderArticulos extends Observable{
 
 		List<ArticuloUnidadMedida> unidadesMedida = new ArrayList<ArticuloUnidadMedida>();
 		XBaseFile writer = null;
-		DBFReader reader = null;
+		DBFReader readerArticulo = null;
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitems.dbf"));
+			readerArticulo = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitems.dbf"));
 			writer = new XBase().open(new File(Application.DIR_LECTURA + "dtitems.dbf"));
 
 			
 			DBFRow row;
 
 			int registro = 0;
-			int cantRegistros = reader.getRecordCount();
+			int cantRegistros = readerArticulo.getRecordCount();
 
-			while ((row = reader.nextRow()) != null) {
+			while ((row = readerArticulo.nextRow()) != null) {
 				
 				registro++;
 				
@@ -187,7 +187,7 @@ public class ReaderArticulos extends Observable{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} finally {
-			DBFUtils.close(reader);
+			DBFUtils.close(readerArticulo);
 			writer.closeQuietly();
 		}
 		
@@ -199,16 +199,16 @@ public class ReaderArticulos extends Observable{
 
 		List<ArticuloUnidadMedida> unidadesMedida = new ArrayList<ArticuloUnidadMedida>();
 
-		DBFReader reader = null;
+		DBFReader readerUnidadMedida = null;
 
 		try {
 
 			// create a DBFReader object
-			reader = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitmedida.dbf"));
+			readerUnidadMedida = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitmedida.dbf"));
 
 			DBFRow row;
 
-			while ((row = reader.nextRow()) != null) {
+			while ((row = readerUnidadMedida.nextRow()) != null) {
 
 				if (!row.getString("MEDCODIGO").equals(codigoArticulo))
 					continue;
@@ -237,7 +237,7 @@ public class ReaderArticulos extends Observable{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} finally {
-			DBFUtils.close(reader);
+			DBFUtils.close(readerUnidadMedida);
 		}
 
 		return unidadesMedida;
