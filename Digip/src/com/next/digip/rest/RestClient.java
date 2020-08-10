@@ -12,6 +12,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.next.digip.controller.ControllerLocal;
 import com.next.digip.dbf.reader.Reader;
 import com.next.digip.main.Application;
 import com.next.digip.model.Articulo;
@@ -491,7 +492,7 @@ public class RestClient {
 	}
 	
 	
-	public List<Pedido> getPedidos() {
+	public List<Pedido> getPedidos(String estado) {
 		
 		List<Pedido> pedidos = new ArrayList<Pedido>();
 		
@@ -505,7 +506,7 @@ public class RestClient {
 			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-			URL url = new URL("http://api.patagoniawms.com/v1/Pedidos");//your url i.e fetch data from .
+			URL url = new URL("http://api.patagoniawms.com/v1/Pedidos?PedidoEstado=" + estado);//your url i.e fetch data from .
 			
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
@@ -852,7 +853,7 @@ public class RestClient {
 
 		try {
 		
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 					
 			
 			url = new URL("http://api.patagoniawms.com/v1/Articulos");//your url i.e fetch data from .
@@ -932,7 +933,7 @@ public class RestClient {
 				
 		WebResponse webResponse = new WebResponse();
 		
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 		
 		intentos = 0;
 		
@@ -1785,6 +1786,7 @@ public class RestClient {
 			} else {
 			     /* error from server */
 			    _is = new InputStreamReader(conn.getErrorStream());
+			    
 			}
 			
 			br = new BufferedReader(_is);
@@ -1809,7 +1811,8 @@ public class RestClient {
 				
 			} else {
 			     /* error from server */
-				webResponse.setResponseMessage(aux);
+				webResponse.setResponseMessage(aux.substring(12, 62));
+				ControllerLocal.getInstance().pedidoPendiente(Integer.valueOf(pedido.getCodigo()),webResponse.getResponseMessage());
 				
 			}
 			

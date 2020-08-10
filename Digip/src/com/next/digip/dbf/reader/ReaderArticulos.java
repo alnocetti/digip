@@ -2,6 +2,7 @@ package com.next.digip.dbf.reader;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,19 +106,17 @@ public class ReaderArticulos extends Observable{
 			readerArticulo = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitems.dbf"));
 			writer = new XBase().open(new File(Application.DIR_LECTURA + "dtitems.dbf"));
 
-			
 			DBFRow row;
 
 			int registro = 0;
 			int cantRegistros = readerArticulo.getRecordCount();
 
 			while ((row = readerArticulo.nextRow()) != null) {
+				registro ++;
 				
-				registro++;
-				
-				this.cantidadLeida = (registro / cantRegistros) * 100;
-				setChanged();
-				notifyObservers("Leyendo articulos: " + Integer.toString(registro) + " de " + Integer.toString(cantRegistros) + "\n");
+//				this.cantidadLeida = (registro / cantRegistros) * 100;
+//				setChanged();
+//				notifyObservers("Leyendo articulos: " + Integer.toString(registro) + " de " + Integer.toString(cantRegistros) + "\n");
 			
 				// ITPEDIDO == "S" .AND. SUBSTR(CODIGO,1,1) # "C" .AND. GRUPO # 90
 
@@ -133,12 +132,13 @@ public class ReaderArticulos extends Observable{
 				if (row.getInt("GRUPO") == 90 || row.getInt("GRUPO") == 98)
 					continue;
 				
-				if (!row.getString("ITNOVEDAD").equals("S"))
-					continue;
-				
 				//actualizo novedad
-				writer.go(registro - 1);
-				writer.setValue("ITNOVEDAD", "N");
+				writer.go(registro-1);
+				//writer.setValue("ITNOVEDAD", "N");
+				writer.delete();
+				
+				//if (!row.getString("ITNOVEDAD").equals("S"))
+				//	continue;
 				
 				articulo.setCodigo(row.getString("CODIGO"));
 				articulo.setDescripcion(row.getString("DESCRIPCIO"));
@@ -200,16 +200,21 @@ public class ReaderArticulos extends Observable{
 		List<ArticuloUnidadMedida> unidadesMedida = new ArrayList<ArticuloUnidadMedida>();
 
 		DBFReader readerUnidadMedida = null;
+		XBaseFile writerUm = null;
 
 		try {
 
 			// create a DBFReader object
 			readerUnidadMedida = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitmedida.dbf"));
+			writerUm = new XBase().open(new File(Application.DIR_LECTURA + "dtitmedida.dbf"));
 
 			DBFRow row;
-
+			
+			int registro = 0;
+					
 			while ((row = readerUnidadMedida.nextRow()) != null) {
-
+				registro ++;
+				
 				if (!row.getString("MEDCODIGO").equals(codigoArticulo))
 					continue;
 
@@ -230,6 +235,9 @@ public class ReaderArticulos extends Observable{
 				unidadMedida.setUnidadMedida_Id(row.getInt("MEDTIPO"));
 
 				unidadesMedida.add(unidadMedida);
+
+				writerUm.go(registro - 1);
+				writerUm.delete();
 			}
 
 		} catch (DBFException e) {
@@ -238,6 +246,8 @@ public class ReaderArticulos extends Observable{
 			e1.printStackTrace();
 		} finally {
 			DBFUtils.close(readerUnidadMedida);
+			writerUm.closeQuietly();
+
 		}
 
 		return unidadesMedida;
@@ -309,5 +319,60 @@ public class ReaderArticulos extends Observable{
 
 		return 0;
 	}
+	
+	public int getNroRegistro(int codigoArticulo) {
+		
+		DBFReader readerNroRegistro = null;
+		
+		int registro = 0;
+		
+
+		// create a DBFReader object
+		try {
+			readerNroRegistro = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtitems.dbf"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBFRow row;
+
+		while ((row = readerNroRegistro.nextRow()) != null) {
+					
+			if(row.getInt("CODIGO") == codigoArticulo) {
+				
+				return registro;
+				
+			}
+			
+			registro ++;
+
+		}		
+		
+		DBFUtils.close(readerNroRegistro);
+
+		return registro;
+		
+	}
+	
+	public void cambiarEstadoArticulo(int registro, String estado) {
+		
+		try {
+			
+			XBaseFile writer = new XBase().open(new File(Application.DIR_LECTURA + "dtitems.dbf"));
+			
+			writer.go(registro);	
+												
+			writer.setValue("DESCRIPCIO", estado);
+						
+			writer.closeQuietly();			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 
 }

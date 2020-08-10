@@ -28,7 +28,7 @@ public class ApplicationSync {
 		Application.DIR_LECTURA = doc.getElementsByTagName("DIR_LECTURA").item(0).getTextContent();
 		Application.DIR_ORIGINAL = doc.getElementsByTagName("DIR_ORIGINAL").item(0).getTextContent();
 		
-		FileUpdater.getInstance().updateFiles();		
+		//FileUpdater.getInstance().updateFiles();		
 
 		ControllerLocal.getInstance().sincronizarClientes();
 		
@@ -37,6 +37,8 @@ public class ApplicationSync {
 		ControllerLocal.getInstance().sincronizarPedidos();
 		
 		ControllerLocal.getInstance().bajarPedidos();
+		
+		System.exit(0);
 
 	}
 

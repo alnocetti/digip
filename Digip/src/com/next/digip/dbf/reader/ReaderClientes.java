@@ -151,15 +151,16 @@ public class ReaderClientes extends Observable{
 			while ((row = reader.nextRow()) != null) {
 				registro ++;
 				
-				setChanged();
-				notifyObservers("Leyendo clientes: " + Integer.toString(registro) + " de " + Integer.toString(cantRegistros) + "\n");
-			
-				if(!row.getString("CLINOVED").equals("S"))
-					continue;
+//				setChanged();
+//				notifyObservers("Leyendo clientes: " + Integer.toString(registro) + " de " + Integer.toString(cantRegistros) + "\n");
+	
+				//if(!row.getString("CLINOVED").equals("S"))
+				//	continue;
 				
 				//actualizo novedad
 				writer.go(registro - 1);
-				writer.setValue("CLINOVED", "N");
+				writer.delete();
+				//writer.setValue("CLINOVED", "N");
 				
 				Cliente cliente = new Cliente();
 				

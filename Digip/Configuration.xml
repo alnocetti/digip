@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Empresa>
-	<API_KEY>nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7</API_KEY>
+<!-- 	<API_KEY>nr9H4yTB3WhnFMx8mnRW55nJgMTtFzr7</API_KEY> -->
+	<API_KEY>prueba</API_KEY>
 	<DIR_LECTURA>\\192.168.90.2\api\</DIR_LECTURA>
 	<DIR_ORIGINAL>\\192.168.90.2\Visual\</DIR_ORIGINAL>
 	<FILE>dtitems.dbf</FILE>

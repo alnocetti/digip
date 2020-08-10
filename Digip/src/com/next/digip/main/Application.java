@@ -36,7 +36,7 @@ public class Application {
 		DIR_LECTURA = doc.getElementsByTagName("DIR_LECTURA").item(0).getTextContent();
 		DIR_ORIGINAL = doc.getElementsByTagName("DIR_ORIGINAL").item(0).getTextContent();
 
-		FileUpdater.getInstance().updateFiles();		
+		//FileUpdater.getInstance().updateFiles();		
 
 		Main mainWindow = new Main();
 		mainWindow.start();		

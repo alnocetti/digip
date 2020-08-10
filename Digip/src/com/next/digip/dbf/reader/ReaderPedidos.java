@@ -2,6 +2,7 @@ package com.next.digip.dbf.reader;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class ReaderPedidos {
 
 	public List<Pedido> readPedidos() throws IOException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
+		SimpleDateFormat formatEstadoPedido = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		DBFReader reader = null;
 		
@@ -72,7 +75,7 @@ public class ReaderPedidos {
 				
 				pedidos.add(pedido);
 				
-				cambiarEstadoPedido(registro - 1);
+				cambiarEstadoPedido(registro - 1, "Enviado", "Fecha envio: " + formatEstadoPedido.format(new Date()));
 
 			}		
 			
@@ -130,19 +133,17 @@ public class ReaderPedidos {
 		return detalles;
 	}
 	
-	public void cambiarEstadoPedido(int registro) {
+	public void cambiarEstadoPedido(int registro, String estado, String observacion) {
 		
 		try {
 			
-			SimpleDateFormat formatEstadoPedido = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
 			XBaseFile writer = new XBase().open(new File(Application.DIR_LECTURA + "dtenvcab.dbf"));
 			
 			writer.go(registro);	
 							
-			writer.setValue("CABESTADO", "Enviado");
+			writer.setValue("CABESTADO", estado);
 					
-			writer.setValue("CABOBSERV", "Fecha envio: " + formatEstadoPedido.format(new Date()));
+			writer.setValue("CABOBSERV", observacion);
 						
 			writer.closeQuietly();			
 			
@@ -150,6 +151,41 @@ public class ReaderPedidos {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public int getNroRegistro(int codigoPedido) {
+		
+		DBFReader readerNroRegistro = null;
+		
+		int registro = 0;
+		
+
+		// create a DBFReader object
+		try {
+			readerNroRegistro = new DBFReader(new FileInputStream(Application.DIR_LECTURA + "dtenvcab.dbf"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBFRow row;
+
+		while ((row = readerNroRegistro.nextRow()) != null) {
+					
+			if(row.getInt("CABCODIGO") == codigoPedido) {
+				
+				return registro;
+				
+			}
+			
+			registro ++;
+
+		}		
+		
+		DBFUtils.close(readerNroRegistro);
+
+		return registro;
 		
 	}
 

@@ -3,6 +3,7 @@ package com.next.digip.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
 import com.next.digip.enums.TipoRotacion;
 
 public class Articulo {
@@ -98,6 +99,5 @@ public class Articulo {
 	public void addUnidadMedida(ArticuloUnidadMedida unidadMedida) {
 		this.ArticuloUnidadMedida.add(unidadMedida);
 	}
-	
 
 }

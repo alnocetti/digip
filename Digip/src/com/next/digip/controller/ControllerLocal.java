@@ -337,7 +337,7 @@ public class ControllerLocal extends Observable implements Observer{
 		setChanged();
 		notifyObservers(estado);
 		
-		List<Pedido> pedidosPatagonia = this.restClient.getPedidos();
+		List<Pedido> pedidosPatagonia = this.restClient.getPedidos("");
 		
 		this.estado = "Leyendo pedidos\n";
 		setChanged();
@@ -443,7 +443,7 @@ public class ControllerLocal extends Observable implements Observer{
 	
 	public List<Pedido> getPedidos() {
 		System.out.println("<-- getPedidos");
-		return restClient.getPedidos();
+		return restClient.getPedidos("");
 	}
 	
 	public void bajarPedidos() throws IOException {
@@ -456,11 +456,12 @@ public class ControllerLocal extends Observable implements Observer{
 		setChanged();
 		notifyObservers(estado);
 		
-		List<Pedido> pedidos = this.restClient.getPedidos();
+		List<Pedido> pedidos = this.restClient.getPedidos("completo");
+		//pedidos.addAll(this.restClient.getPedidos("eliminado"));
 		
 		for(Pedido pedido : pedidos) {
 			
-			if( pedido.getPedidoEstado().trim().equals("4") && pedido.getCodigo() != null) {
+			if( (pedido.getPedidoEstado().trim().equals("4")) && pedido.getCodigo() != null) {
 				this.estado = "Guardando pedido: " + pedido.getCodigo() + "\n";
 				setChanged();
 				notifyObservers(estado);
@@ -482,6 +483,23 @@ public class ControllerLocal extends Observable implements Observer{
 		}
 		
 		return;
+		
+	}
+	
+	public void pedidoPendiente(int codigoPedido, String error) {
+		
+		int aux = this.readerPedidos.getNroRegistro(codigoPedido);
+		
+		this.readerPedidos.cambiarEstadoPedido(aux, "Pendiente", error);
+		
+		return;
+	}
+	
+	public void errorEnvioArticulo(int codigoArticulo, String error) {
+		
+		int aux = this.readerArticulos.getNroRegistro(codigoArticulo);
+		
+		this.readerArticulos.cambiarEstadoArticulo(aux, error);
 		
 	}
 	
