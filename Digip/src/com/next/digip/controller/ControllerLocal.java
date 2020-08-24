@@ -34,7 +34,7 @@ public class ControllerLocal extends Observable implements Observer{
    public static ControllerLocal getInstance() throws RuntimeException {
         
 	   instance = instance == null ? new ControllerLocal() : instance;
-//       if(instance == null) {
+///       if(instance == null) {
 //           
 //       	instance =  new ControllerLocal();
 //       }
